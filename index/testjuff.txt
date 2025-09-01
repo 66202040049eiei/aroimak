@@ -1,0 +1,2658 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>อร่อยดี - แนะนำอาหารไทย</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap');
+        body { 
+            font-family: 'Kanit', sans-serif; 
+        }
+        
+        .page { 
+            display: none; 
+        }
+        
+        .page.active { 
+            display: block; 
+        }
+        
+        .food-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .food-card:hover { 
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        .nav-btn {
+            transition: all 0.3s ease;
+        }
+        
+        .nav-btn.active {
+            background: linear-gradient(135deg, #f97316, #dc2626);
+            color: white;
+        }
+        
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .modal {
+            backdrop-filter: blur(5px);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-orange-50 to-red-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-3">
+                    <div class="text-3xl">🍜</div>
+                    <h1 class="text-2xl font-bold text-orange-600">อร่อยดี</h1>
+                </div>
+                <div class="flex space-x-4">
+                    <button onclick="showPage('home')" class="nav-btn px-4 py-2 rounded-lg font-medium active">หน้าหลัก</button>
+                    <button onclick="showPage('recipes')" class="nav-btn px-4 py-2 rounded-lg font-medium text-gray-600 hover:text-orange-600">สูตรอาหาร</button>
+                    <button onclick="showPage('contact')" class="nav-btn px-4 py-2 rounded-lg font-medium text-gray-600 hover:text-orange-600">ติดต่อเรา</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Home Page -->
+    <div id="home" class="page active">
+        <!-- Hero Section -->
+        <section class="bg-gradient-to-r from-orange-400 to-red-500 text-white py-20">
+            <div class="max-w-6xl mx-auto px-4 text-center">
+                <h2 class="text-5xl font-bold mb-6 floating">ยินดีต้อนรับสู่อร่อยดี</h2>
+                <p class="text-xl mb-8 max-w-2xl mx-auto">ค้นพบสูตรอาหารไทยแสนอร่อย ที่จะทำให้คุณหลงรักรสชาติต้นตำรับ</p>
+                <button onclick="showPage('recipes')" class="bg-white text-orange-600 px-8 py-3 rounded-full font-semibold text-lg hover:bg-gray-100 transition-all">
+                    เริ่มต้นทำอาหาร 👨‍🍳
+                </button>
+            </div>
+        </section>
+
+        <!-- Featured Dishes -->
+        <section class="py-16">
+            <div class="max-w-6xl mx-auto px-4">
+                <h3 class="text-4xl font-bold text-center mb-12 text-gray-800">อาหารยอดนิยม</h3>
+                
+                <!-- Carousel Container -->
+                <div class="relative">
+                    <!-- Navigation Buttons -->
+                    <button onclick="previousSlide()" class="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-4 z-10 bg-white rounded-full p-3 shadow-lg hover:shadow-xl transition-all hover:bg-orange-50">
+                        <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                    </button>
+                    
+                    <button onclick="nextSlide()" class="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-4 z-10 bg-white rounded-full p-3 shadow-lg hover:shadow-xl transition-all hover:bg-orange-50">
+                        <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </button>
+
+                    <!-- Carousel Track -->
+                    <div class="overflow-hidden">
+                        <div id="carousel-track" class="flex transition-transform duration-500 ease-in-out">
+                            <!-- Slide 1 -->
+                            <div class="w-full flex-shrink-0">
+                                <div class="grid md:grid-cols-3 gap-8">
+                                    <!-- Fried Rice Card -->
+                                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden" onclick="showRecipe('fried-rice')">
+                                        <div class="h-48 bg-gradient-to-br from-orange-200 to-red-200 flex items-center justify-center">
+                                           <img src="index\wpic/1.jpg" class="w-full h-full object-cover">
+                                        </div>
+                                        <div class="p-6">
+                                            <h4 class="text-xl font-semibold mb-2">ข้าวผัดกุ้ง</h4>
+                                            <p class="text-gray-600 mb-4">ข้าวผัดกุ้งสูตรต้นตำรับ หอมหวานจากกุ้งสด</p>
+                                            <div class="text-orange-600 font-medium">ดูสูตร →</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Tom Yum Card -->
+                                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden" onclick="showRecipe('tom-yum')">
+                                        <div class="h-48 bg-gradient-to-br from-green-200 to-emerald-200 flex items-center justify-center">
+                                           <img src="index\wpic/2.jpg" class="w-full h-full object-cover">
+                                        </div>
+                                        <div class="p-6">
+                                            <h4 class="text-xl font-semibold mb-2">ต้มยำกุ้ง</h4>
+                                            <p class="text-gray-600 mb-4">ต้มยำกุ้งรสจัดจ้าน เปรื้อยเผ็ดแบบไทยแท้</p>
+                                            <div class="text-green-600 font-medium">ดูสูตร →</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Som Tam Card -->
+                                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden" onclick="showRecipe('som-tam')">
+                                        <div class="h-48 bg-gradient-to-br from-yellow-200 to-orange-200 flex items-center justify-center">
+                                           <img src="index\wpic/3.jpg" class="w-full h-full object-cover">
+                                        </div>
+                                        <div class="p-6">
+                                            <h4 class="text-xl font-semibold mb-2">ส้มตำไทย</h4>
+                                            <p class="text-gray-600 mb-4">ส้มตำสูตรต้นตำรับ เปรี้ยวหวานเผ็ดจัดจ้าน</p>
+                                            <div class="text-yellow-600 font-medium">ดูสูตร →</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Slide 2 -->
+                            <div class="w-full flex-shrink-0">
+                                <div class="grid md:grid-cols-3 gap-8">
+                                    <!-- Pad Thai Card -->
+                                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden" onclick="showRecipe('pad-thai')">
+                                        <div class="h-48 bg-gradient-to-br from-pink-200 to-rose-200 flex items-center justify-center">
+                                           <img src="index\wpic/4.jpg" class="w-full h-full object-cover">
+                                        </div>
+                                        <div class="p-6">
+                                            <h4 class="text-xl font-semibold mb-2">ผัดไทย</h4>
+                                            <p class="text-gray-600 mb-4">ผัดไทยสูตรต้นตำรับ หวานเปรื้อยเค็มกำลังดี</p>
+                                            <div class="text-pink-600 font-medium">ดูสูตร →</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Green Curry Card -->
+                                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden" onclick="showRecipe('green-curry')">
+                                        <div class="h-48 bg-gradient-to-br from-green-200 to-teal-200 flex items-center justify-center">
+                                           <img src="index\wpic/5.jpg" class="w-full h-full object-cover">
+                                        </div>
+                                        <div class="p-6">
+                                            <h4 class="text-xl font-semibold mb-2">แกงเขียวหวาน</h4>
+                                            <p class="text-gray-600 mb-4">แกงเขียวหวานไก่ เผ็ดร้อนหอมกะทิ</p>
+                                            <div class="text-green-600 font-medium">ดูสูตร →</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Basil Pork Card -->
+                                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden" onclick="showRecipe('basil-pork')">
+                                        <div class="h-48 bg-gradient-to-br from-emerald-200 to-green-200 flex items-center justify-center">
+                                            <img src="index\wpic/6.jpg" class="w-full h-full object-cover">
+                                        </div>
+                                        <div class="p-6">
+                                            <h4 class="text-xl font-semibold mb-2">ผัดกะเพราหมู</h4>
+                                            <p class="text-gray-600 mb-4">ผัดกะเพราหมูสับ เผ็ดร้อนหอมใบกะเพรา</p>
+                                            <div class="text-emerald-600 font-medium">ดูสูตร →</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Slide 3 -->
+                            <div class="w-full flex-shrink-0">
+                                <div class="grid md:grid-cols-3 gap-8">
+                                    <!-- Massaman Curry Card -->
+                                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden" onclick="showRecipe('massaman-curry')">
+                                        <div class="h-48 bg-gradient-to-br from-red-200 to-orange-200 flex items-center justify-center">
+                                           <img src="index\wpic/7.jpg" class="w-full h-full object-cover">
+                                        </div>
+                                        <div class="p-6">
+                                            <h4 class="text-xl font-semibold mb-2">แกงมัสมั่น</h4>
+                                            <p class="text-gray-600 mb-4">แกงมัสมั่นเนื้อ หอมเครื่องเทศ นุ่มละมุน</p>
+                                            <div class="text-red-600 font-medium">ดูสูตร →</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Larb Pork Card -->
+                                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden" onclick="showRecipe('larb-pork')">
+                                        <div class="h-48 bg-gradient-to-br from-red-200 to-pink-200 flex items-center justify-center">
+                                           <img src="index\wpic/8.jpg" class="w-full h-full object-cover">
+                                        </div>
+                                        <div class="p-6">
+                                            <h4 class="text-xl font-semibold mb-2">ลาบหมู</h4>
+                                            <p class="text-gray-600 mb-4">ลาบหมูอีสาน เปรี้ยวเผ็ดหอมข้าวคั่ว</p>
+                                            <div class="text-red-600 font-medium">ดูสูตร →</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Thai Tea Card -->
+                                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden" onclick="showRecipe('thai-tea')">
+                                        <div class="h-48 bg-gradient-to-br from-orange-200 to-amber-200 flex items-center justify-center">
+                                           <img src="index\wpic/9.jpg" class="w-full h-full object-cover">
+                                        </div>
+                                        <div class="p-6">
+                                            <h4 class="text-xl font-semibold mb-2">ชาไทย</h4>
+                                            <p class="text-gray-600 mb-4">ชาไทยเย็น หวานมันนมข้นหวาน</p>
+                                            <div class="text-orange-600 font-medium">ดูสูตร →</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Slide 4 -->
+                            <div class="w-full flex-shrink-0">
+                                <div class="grid md:grid-cols-3 gap-8">
+                                    <!-- Mango Sticky Rice Card -->
+                                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden" onclick="showRecipe('mango-sticky-rice')">
+                                        <div class="h-48 bg-gradient-to-br from-yellow-200 to-orange-200 flex items-center justify-center">
+                                            <img src="index\wpic/10.jpg" class="w-full h-full object-cover">
+                                        </div>
+                                        <div class="p-6">
+                                            <h4 class="text-xl font-semibold mb-2">ข้าวเหนียวมะม่วง</h4>
+                                            <p class="text-gray-600 mb-4">ข้าวเหนียวมะม่วงหวาน ของหวานไทยคลาสสิก</p>
+                                            <div class="text-yellow-600 font-medium">ดูสูตร →</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Grilled Chicken Card -->
+                                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden" onclick="showRecipe('gai-yang')">
+                                        <div class="h-48 bg-gradient-to-br from-orange-200 to-red-200 flex items-center justify-center">
+                                            <img src="index\wpic/11.jpg" class="w-full h-full object-cover">
+                                        </div>
+                                        <div class="p-6">
+                                            <h4 class="text-xl font-semibold mb-2">ไก่ย่าง</h4>
+                                            <p class="text-gray-600 mb-4">ไก่ย่างอีสาน หอมเครื่องเทศ กรอบนอกนุ่มใน</p>
+                                            <div class="text-orange-600 font-medium">ดูสูตร →</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Coconut Water Card -->
+                                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden" onclick="showRecipe('coconut-water')">
+                                        <div class="h-48 bg-gradient-to-br from-green-200 to-teal-200 flex items-center justify-center">
+                                           <img src="index\wpic/12.jpg" class="w-full h-full object-cover">
+                                        </div>
+                                        <div class="p-6">
+                                            <h4 class="text-xl font-semibold mb-2">น้ำมะพร้าวสด</h4>
+                                            <p class="text-gray-600 mb-4">น้ำมะพร้าวสดเย็นๆ ดับกระหายวันร้อน</p>
+                                            <div class="text-green-600 font-medium">ดูสูตร →</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide Indicators -->
+                    <div class="flex justify-center mt-8 space-x-2">
+                        <button onclick="goToSlide(0)" class="slide-indicator w-3 h-3 rounded-full bg-orange-500 transition-all"></button>
+                        <button onclick="goToSlide(1)" class="slide-indicator w-3 h-3 rounded-full bg-gray-300 hover:bg-orange-300 transition-all"></button>
+                        <button onclick="goToSlide(2)" class="slide-indicator w-3 h-3 rounded-full bg-gray-300 hover:bg-orange-300 transition-all"></button>
+                        <button onclick="goToSlide(3)" class="slide-indicator w-3 h-3 rounded-full bg-gray-300 hover:bg-orange-300 transition-all"></button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section class="bg-gradient-to-r from-purple-500 to-pink-500 text-white py-16">
+            <div class="max-w-4xl mx-auto px-4 text-center">
+                <h3 class="text-3xl font-bold mb-6">เกี่ยวกับเรา</h3>
+                <p class="text-lg leading-relaxed">
+                    อร่อยดีคือแหล่งรวมสูตรอาหารไทยต้นตำรับ ที่รวบรวมมาจากเชฟมืออาชีพและคุณยายที่มีประสบการณ์มากมาย 
+                    เราต้องการแบ่งปันความอร่อยของอาหารไทยให้ทุกคนได้ลิ้มลองและทำตามได้ง่ายๆ ที่บ้าน
+                </p>
+            </div>
+        </section>
+    </div>
+
+    <!-- Recipes Page -->
+    <div id="recipes" class="page">
+        <div class="max-w-6xl mx-auto px-4 py-12">
+            <h2 class="text-4xl font-bold text-center mb-12 text-gray-800">สูตรอาหารของเรา</h2>
+            
+            <!-- Category Tabs -->
+            <div class="flex flex-wrap justify-center gap-4 mb-12">
+                <button onclick="showCategory('main-dishes')" class="category-tab active bg-gradient-to-r from-orange-500 to-red-500 text-white px-6 py-3 rounded-full font-semibold transition-all hover:shadow-lg">
+                    🍛 อาหารจานหลัก
+                </button>
+                <button onclick="showCategory('soups')" class="category-tab bg-white text-green-600 border-2 border-green-500 px-6 py-3 rounded-full font-semibold transition-all hover:bg-green-50 hover:shadow-lg">
+                    🍲 แกงและซุป
+                </button>
+                <button onclick="showCategory('salads')" class="category-tab bg-white text-yellow-600 border-2 border-yellow-500 px-6 py-3 rounded-full font-semibold transition-all hover:bg-yellow-50 hover:shadow-lg">
+                    🥗 ยำและสลัด
+                </button>
+                <button onclick="showCategory('grilled')" class="category-tab bg-white text-purple-600 border-2 border-purple-500 px-6 py-3 rounded-full font-semibold transition-all hover:bg-purple-50 hover:shadow-lg">
+                    🔥 ย่างและทอด
+                </button>
+                <button onclick="showCategory('drinks')" class="category-tab bg-white text-cyan-600 border-2 border-cyan-500 px-6 py-3 rounded-full font-semibold transition-all hover:bg-cyan-50 hover:shadow-lg">
+                    🧊 เครื่องดื่มไทย
+                </button>
+                <button onclick="showCategory('desserts')" class="category-tab bg-white text-pink-600 border-2 border-pink-500 px-6 py-3 rounded-full font-semibold transition-all hover:bg-pink-50 hover:shadow-lg">
+                    🍮 ของหวานไทย
+                </button>
+            </div>
+            
+            <!-- Main Dishes -->
+            <div id="main-dishes" class="category-section mb-12">
+                <h3 class="text-3xl font-bold mb-8 text-orange-600 text-center">🍛 อาหารจานหลัก</h3>
+                <div class="grid md:grid-cols-4 gap-6">
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('fried-rice')">
+                        <div class="h-40 bg-gradient-to-br from-orange-300 via-red-300 to-pink-300 flex items-center justify-center">
+                            <img src="index/mainpic/1.jpg" class="w-full h-full object-cover" alt="ข้าวผัดกุ้ง">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ข้าวผัดกุ้ง</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 20 นาที | ง่าย | ภาคกลาง</p>
+                            <div class="text-orange-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('pad-thai')">
+                        <div class="h-40 bg-gradient-to-br from-pink-300 via-rose-300 to-red-300 flex items-center justify-center">
+                            <img src="index/mainpic/2.jpg" class="w-full h-full object-cover" alt="ผัดไทย">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ผัดไทย</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 25 นาที | ปานกลาง | ภาคกลาง</p>
+                            <div class="text-pink-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('basil-pork')">
+                        <div class="h-40 bg-gradient-to-br from-green-300 via-emerald-300 to-teal-300 flex items-center justify-center">
+                           <img src="index/mainpic/3.jpg" class="w-full h-full object-cover" alt="ผัดกะเพราหมู">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ผัดกะเพราหมู</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 15 นาที | ง่าย | ภาคกลาง</p>
+                            <div class="text-green-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('khao-pad-pineapple')">
+                        <div class="h-40 bg-gradient-to-br from-yellow-300 via-orange-300 to-red-300 flex items-center justify-center">
+                            <img src="index/mainpic/4.jpg" class="w-full h-full object-cover" alt="ข้าวผัดสับปะรด">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ข้าวผัดสับปะรด</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 30 นาที | ปานกลาง | ภาคใต้</p>
+                            <div class="text-yellow-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('pad-see-ew')">
+                        <div class="h-40 bg-gradient-to-br from-amber-300 via-orange-300 to-red-300 flex items-center justify-center">
+                            <img src="index/mainpic/5.jpg" class="w-full h-full object-cover" alt="ผัดซีอิ๊ว">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ผัดซีอิ๊ว</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 20 นาที | ง่าย | ภาคกลาง</p>
+                            <div class="text-amber-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('khao-soi')">
+                        <div class="h-40 bg-gradient-to-br from-yellow-300 via-amber-300 to-orange-300 flex items-center justify-center">
+                            <img src="index/mainpic/6.jpg" class="w-full h-full object-cover" alt="ข้าวซอย">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ข้าวซอย</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 45 นาที | ยาก | ภาคเหนือ</p>
+                            <div class="text-amber-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('massaman-curry')">
+                        <div class="h-40 bg-gradient-to-br from-red-300 via-orange-300 to-yellow-300 flex items-center justify-center">
+                            <img src="index/mainpic/7.jpg" class="w-full h-full object-cover" alt="แกงมัสมั่น">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">แกงมัสมั่น</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 60 นาที | ยาก | ภาคใต้</p>
+                            <div class="text-red-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('pad-kra-pao-kai')">
+                        <div class="h-40 bg-gradient-to-br from-green-300 via-lime-300 to-yellow-300 flex items-center justify-center">
+                            <img src="index/mainpic/8.jpg" class="w-full h-full object-cover" alt="ผัดกะเพราไก่">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ผัดกะเพราไก่</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 15 นาที | ง่าย | ภาคกลาง</p>
+                            <div class="text-green-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('gaeng-som')">
+                        <div class="h-40 bg-gradient-to-br from-orange-300 via-red-300 to-pink-300 flex items-center justify-center">
+                            <img src="index/mainpic/9.jpg" class="w-full h-full object-cover" alt="แกงส้มปลา">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">แกงส้มปลา</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 35 นาที | ปานกลาง | ภาคใต้</p>
+                            <div class="text-orange-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('sai-ua')">
+                        <div class="h-40 bg-gradient-to-br from-purple-300 via-pink-300 to-red-300 flex items-center justify-center">
+                            <img src="index/mainpic/10.jpg" class="w-full h-full object-cover" alt="ไส้อั่ว">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ไส้อั่ว</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 40 นาที | ปานกลาง | ภาคเหนือ</p>
+                            <div class="text-purple-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('khao-mok-gai')">
+                        <div class="h-40 bg-gradient-to-br from-yellow-300 via-orange-300 to-amber-300 flex items-center justify-center">
+                            <img src="index/mainpic/11.jpg" class="w-full h-full object-cover" alt="ข้าวหมกไก่">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ข้าวหมกไก่</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 50 นาที | ยาก | ภาคใต้</p>
+                            <div class="text-yellow-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('nam-prik-ong')">
+                        <div class="h-40 bg-gradient-to-br from-red-300 via-orange-300 to-yellow-300 flex items-center justify-center">
+                            <img src="index/mainpic/12.jpg" class="w-full h-full object-cover" alt="น้ำพริกอ่อง">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">น้ำพริกอ่อง</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 30 นาที | ปานกลาง | ภาคเหนือ</p>
+                            <div class="text-red-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Soups & Curries -->
+            <div id="soups" class="category-section mb-12 hidden">
+                <h3 class="text-3xl font-bold mb-8 text-green-600 text-center">🍲 แกงและซุป</h3>
+                <div class="grid md:grid-cols-4 gap-6">
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('tom-yum')">
+                        <div class="h-40 bg-gradient-to-br from-red-300 via-pink-300 to-rose-300 flex items-center justify-center">
+                            <img src="index/mainpic/13.jpg" class="w-full h-full object-cover" alt="ต้มยำกุ้ง">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ต้มยำกุ้ง</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 30 นาที | ปานกลาง | ภาคกลาง</p>
+                            <div class="text-red-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('green-curry')">
+                        <div class="h-40 bg-gradient-to-br from-green-300 via-emerald-300 to-teal-300 flex items-center justify-center">
+                            <img src="index/mainpic/14.jpg" class="w-full h-full object-cover" alt="แกงเขียวหวาน">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">แกงเขียวหวาน</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 40 นาที | ปานกลาง | ภาคกลาง</p>
+                            <div class="text-green-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('tom-kha')">
+                        <div class="h-40 bg-gradient-to-br from-yellow-300 via-orange-300 to-amber-300 flex items-center justify-center">
+                            <img src="index/mainpic/15.jpg" class="w-full h-full object-cover" alt="ต้มข่าไก่">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ต้มข่าไก่</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 25 นาที | ง่าย | ภาคกลาง</p>
+                            <div class="text-yellow-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('red-curry')">
+                        <div class="h-40 bg-gradient-to-br from-red-300 via-orange-300 to-yellow-300 flex items-center justify-center">
+                            <img src="index/mainpic/16.jpg" class="w-full h-full object-cover" alt="แกงเผ็ด">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">แกงเผ็ด</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 35 นาที | ปานกลาง | ภาคกลาง</p>
+                            <div class="text-red-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('gaeng-pa')">
+                        <div class="h-40 bg-gradient-to-br from-green-300 via-lime-300 to-yellow-300 flex items-center justify-center">
+                            <img src="index/mainpic/17.jpg" class="w-full h-full object-cover" alt="แกงป่า">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">แกงป่า</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 30 นาที | ปานกลาง | ภาคเหนือ</p>
+                            <div class="text-green-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('tom-saep')">
+                        <div class="h-40 bg-gradient-to-br from-orange-300 via-red-300 to-pink-300 flex items-center justify-center">
+                            <img src="index/mainpic/18.jpg" class="w-full h-full object-cover" alt="ต้มแซ่บ">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ต้มแซ่บ</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 25 นาที | ง่าย | ภาคอีสาน</p>
+                            <div class="text-orange-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('gaeng-tai-pla')">
+                        <div class="h-40 bg-gradient-to-br from-gray-300 via-slate-300 to-zinc-300 flex items-center justify-center">
+                            <img src="index/mainpic/19.jpg" class="w-full h-full object-cover" alt="แกงไตปลา">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">แกงไตปลา</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 40 นาที | ยาก | ภาคใต้</p>
+                            <div class="text-gray-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('sup-nor-mai')">
+                        <div class="h-40 bg-gradient-to-br from-green-300 via-teal-300 to-cyan-300 flex items-center justify-center">
+                            <img src="index/mainpic/20.jpg" class="w-full h-full object-cover" alt="ซุปหน่อไม้">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ซุปหน่อไม้</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 35 นาที | ปานกลาง | ภาคเหนือ</p>
+                            <div class="text-teal-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Salads -->
+            <div id="salads" class="category-section mb-12 hidden">
+                <h3 class="text-3xl font-bold mb-8 text-yellow-600 text-center">🥗 ยำและสลัด</h3>
+                <div class="grid md:grid-cols-4 gap-6">
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('som-tam')">
+                        <div class="h-40 bg-gradient-to-br from-orange-300 via-yellow-300 to-amber-300 flex items-center justify-center">
+                            <img src="index/mainpic/21.jpg" class="w-full h-full object-cover" alt="ส้มตำไทย">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ส้มตำไทย</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 15 นาที | ง่าย | ภาคอีสาน</p>
+                            <div class="text-orange-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('larb-pork')">
+                        <div class="h-40 bg-gradient-to-br from-red-300 via-pink-300 to-rose-300 flex items-center justify-center">
+                            <img src="index/mainpic/22.jpg" class="w-full h-full object-cover" alt="ลาบหมู">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ลาบหมู</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 25 นาที | ปานกลาง | ภาคอีสาน</p>
+                            <div class="text-red-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('shrimp-salad')">
+                        <div class="h-40 bg-gradient-to-br from-pink-300 via-purple-300 to-violet-300 flex items-center justify-center">
+                           <img src="index/mainpic/23.jpg" class="w-full h-full object-cover" alt="ยำกุ้ง">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ยำกุ้ง</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 20 นาที | ปานกลาง | ภาคกลาง</p>
+                            <div class="text-pink-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('yam-wun-sen')">
+                        <div class="h-40 bg-gradient-to-br from-blue-300 via-indigo-300 to-purple-300 flex items-center justify-center">
+                            <img src="index/mainpic/24.jpg" class="w-full h-full object-cover" alt="ยำวุ้นเส้น">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ยำวุ้นเส้น</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 20 นาที | ง่าย | ภาคกลาง</p>
+                            <div class="text-blue-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('nam-tok')">
+                        <div class="h-40 bg-gradient-to-br from-red-300 via-orange-300 to-yellow-300 flex items-center justify-center">
+                            <img src="index/mainpic/25.jpg" class="w-full h-full object-cover" alt="น้ำตกหมู">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">น้ำตกหมู</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 30 นาที | ปานกลาง | ภาคอีสาน</p>
+                            <div class="text-red-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('yam-mama')">
+                        <div class="h-40 bg-gradient-to-br from-yellow-300 via-orange-300 to-red-300 flex items-center justify-center">
+                            <img src="index/mainpic/26.jpg" class="w-full h-full object-cover" alt="ยำมาม่า">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ยำมาม่า</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 15 นาที | ง่าย | ภาคอีสาน</p>
+                            <div class="text-yellow-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('yam-pla-duk-fu')">
+                        <div class="h-40 bg-gradient-to-br from-amber-300 via-yellow-300 to-orange-300 flex items-center justify-center">
+                            <img src="index/mainpic/27.jpg" class="w-full h-full object-cover" alt="ยำปลาดุกฟู">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ยำปลาดุกฟู</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 35 นาที | ปานกลาง | ภาคกลาง</p>
+                            <div class="text-amber-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('yam-tua-plu')">
+                        <div class="h-40 bg-gradient-to-br from-green-300 via-emerald-300 to-teal-300 flex items-center justify-center">
+                            <img src="index/mainpic/28.jpg" class="w-full h-full object-cover" alt="ยำถั่วพลู">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ยำถั่วพลู</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 20 นาที | ง่าย | ภาคใต้</p>
+                            <div class="text-green-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('yam-khai-dao')">
+                        <div class="h-40 bg-gradient-to-br from-yellow-300 via-amber-300 to-orange-300 flex items-center justify-center">
+                            <img src="index/mainpic/29.jpg" class="w-full h-full object-cover" alt="ยำไข่ดาว">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ยำไข่ดาว</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 15 นาที | ง่าย | ภาคอีสาน</p>
+                            <div class="text-yellow-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('yam-som-o')">
+                        <div class="h-40 bg-gradient-to-br from-pink-300 via-rose-300 to-red-300 flex items-center justify-center">
+                            <img src="index/mainpic/30.jpg" class="w-full h-full object-cover" alt="ยำส้มโอ">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ยำส้มโอ</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 20 นาที | ง่าย | ภาคกลาง</p>
+                            <div class="text-pink-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grilled & Fried -->
+            <div id="grilled" class="category-section mb-12 hidden">
+                <h3 class="text-3xl font-bold mb-8 text-purple-600 text-center">🔥 ย่างและทอด</h3>
+                <div class="grid md:grid-cols-4 gap-6">
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('gai-yang')">
+                        <div class="h-40 bg-gradient-to-br from-orange-300 via-red-300 to-pink-300 flex items-center justify-center">
+                            <img src="index/mainpic/31.jpg" class="w-full h-full object-cover" alt="ไก่ย่าง">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ไก่ย่าง</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 45 นาที | ปานกลาง | ภาคอีสาน</p>
+                            <div class="text-orange-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('moo-ping')">
+                        <div class="h-40 bg-gradient-to-br from-red-300 via-pink-300 to-rose-300 flex items-center justify-center">
+                            <img src="index/mainpic/32.jpg" class="w-full h-full object-cover" alt="หมูปิ้ง">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">หมูปิ้ง</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 30 นาที | ง่าย | ภาคอีสาน</p>
+                            <div class="text-red-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('pla-pao')">
+                        <div class="h-40 bg-gradient-to-br from-blue-300 via-cyan-300 to-teal-300 flex items-center justify-center">
+                            <img src="index/mainpic/33.jpg" class="w-full h-full object-cover" alt="ปลาเผา">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ปลาเผา</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 25 นาที | ง่าย | ภาคอีสาน</p>
+                            <div class="text-blue-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('tod-man-pla')">
+                        <div class="h-40 bg-gradient-to-br from-yellow-300 via-orange-300 to-red-300 flex items-center justify-center">
+                            <img src="index/mainpic/34.jpg" class="w-full h-full object-cover" alt="ทอดมันปลา">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ทอดมันปลา</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 30 นาที | ปานกลาง | ภาคกลาง</p>
+                            <div class="text-yellow-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thai Drinks -->
+            <div id="drinks" class="category-section mb-12 hidden">
+                <h3 class="text-3xl font-bold mb-8 text-cyan-600 text-center">🧊 เครื่องดื่มไทย</h3>
+                <div class="grid md:grid-cols-4 gap-6">
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('thai-tea')">
+                        <div class="h-40 bg-gradient-to-br from-orange-300 via-amber-300 to-yellow-300 flex items-center justify-center">
+                            <img src="index/mainpic/35.jpg" class="w-full h-full object-cover" alt="ชาไทย">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ชาไทย</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 10 นาที | ง่าย | ทั่วไทย</p>
+                            <div class="text-orange-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('thai-coffee')">
+                        <div class="h-40 bg-gradient-to-br from-amber-300 via-orange-300 to-red-300 flex items-center justify-center">
+                            <img src="index/mainpic/36.jpg" class="w-full h-full object-cover" alt="กาแฟโบราณ">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">กาแฟโบราณ</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 15 นาที | ง่าย | ทั่วไทย</p>
+                            <div class="text-amber-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('coconut-water')">
+                        <div class="h-40 bg-gradient-to-br from-green-300 via-emerald-300 to-teal-300 flex items-center justify-center">
+                            <img src="index/mainpic/37.jpg" class="w-full h-full object-cover" alt="น้ำมะพร้าวสด">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">น้ำมะพร้าวสด</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 5 นาที | ง่าย | ทั่วไทย</p>
+                            <div class="text-green-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('lemon-soda')">
+                        <div class="h-40 bg-gradient-to-br from-yellow-300 via-lime-300 to-green-300 flex items-center justify-center">
+                            <img src="index/mainpic/38.jpg" class="w-full h-full object-cover" alt="น้ำมะนาวโซดา">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">น้ำมะนาวโซดา</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 5 นาที | ง่าย | ทั่วไทย</p>
+                            <div class="text-yellow-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('butterfly-pea')">
+                        <div class="h-40 bg-gradient-to-br from-blue-300 via-purple-300 to-pink-300 flex items-center justify-center">
+                            <img src="index/mainpic/39.jpg" class="w-full h-full object-cover" alt="น้ำอัญชัน">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">น้ำอัญชัน</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 10 นาที | ง่าย | ทั่วไทย</p>
+                            <div class="text-blue-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('tamarind-juice')">
+                        <div class="h-40 bg-gradient-to-br from-brown-300 via-amber-300 to-orange-300 flex items-center justify-center">
+                            <img src="index/mainpic/40.jpg" class="w-full h-full object-cover" alt="น้ำมะขาม">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">น้ำมะขาม</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 15 นาที | ง่าย | ทั่วไทย</p>
+                            <div class="text-amber-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('lychee-juice')">
+                        <div class="h-40 bg-gradient-to-br from-pink-300 via-rose-300 to-red-300 flex items-center justify-center">
+                            <img src="index/mainpic/41.jpg" class="w-full h-full object-cover" alt="น้ำลิ้นจี่">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">น้ำลิ้นจี่</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 10 นาที | ง่าย | ทั่วไทย</p>
+                            <div class="text-pink-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('chrysanthemum-tea')">
+                        <div class="h-40 bg-gradient-to-br from-yellow-300 via-orange-300 to-amber-300 flex items-center justify-center">
+                            <img src="index/mainpic/42.jpg" class="w-full h-full object-cover" alt="น้ำเก๊กฮวย">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">น้ำเก๊กฮวย</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 20 นาที | ง่าย | ทั่วไทย</p>
+                            <div class="text-yellow-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('longan-juice')">
+                        <div class="h-40 bg-gradient-to-br from-orange-300 via-yellow-300 to-amber-300 flex items-center justify-center">
+                            <img src="index/mainpic/43.jpg" class="w-full h-full object-cover" alt="น้ำลำไย">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">น้ำลำไย</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 10 นาที | ง่าย | ทั่วไทย</p>
+                            <div class="text-orange-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('pandanus-juice')">
+                        <div class="h-40 bg-gradient-to-br from-green-300 via-lime-300 to-emerald-300 flex items-center justify-center">
+                            <img src="index/mainpic/44.jpg" class="w-full h-full object-cover" alt="น้ำใบเตย">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">น้ำใบเตย</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 15 นาที | ง่าย | ทั่วไทย</p>
+                            <div class="text-green-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thai Desserts -->
+            <div id="desserts" class="category-section mb-12 hidden">
+                <h3 class="text-3xl font-bold mb-8 text-pink-600 text-center">🍮 ของหวานไทย</h3>
+                <div class="grid md:grid-cols-4 gap-6">
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('mango-sticky-rice')">
+                        <div class="h-40 bg-gradient-to-br from-yellow-300 via-orange-300 to-amber-300 flex items-center justify-center">
+                            <img src="index/mainpic/45.jpg" class="w-full h-full object-cover" alt="ข้าวเหนียวมะม่วง">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ข้าวเหนียวมะม่วง</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 45 นาที | ง่าย | ทั่วไทย</p>
+                            <div class="text-yellow-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('thong-yip')">
+                        <div class="h-40 bg-gradient-to-br from-yellow-300 via-orange-300 to-red-300 flex items-center justify-center">
+                            <img src="index/mainpic/46.jpg" class="w-full h-full object-cover" alt="ทองหยิบ">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ทองหยิบ</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 60 นาที | ยาก | ภาคกลาง</p>
+                            <div class="text-yellow-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('kanom-krok')">
+                        <div class="h-40 bg-gradient-to-br from-white via-cream-200 to-yellow-200 flex items-center justify-center">
+                            <img src="index/mainpic/47.jpg" class="w-full h-full object-cover" alt="ขนมครก">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ขนมครก</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 30 นาที | ปานกลาง | ทั่วไทย</p>
+                            <div class="text-orange-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('tub-tim-grob')">
+                        <div class="h-40 bg-gradient-to-br from-red-300 via-pink-300 to-rose-300 flex items-center justify-center">
+                            <img src="index/mainpic/48.jpg" class="w-full h-full object-cover" alt="ทับทิมกรอบ">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ทับทิมกรอบ</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 40 นาที | ปานกลาง | ภาคกลาง</p>
+                            <div class="text-red-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('kanom-buang')">
+                        <div class="h-40 bg-gradient-to-br from-orange-300 via-yellow-300 to-amber-300 flex items-center justify-center">
+                            <img src="index/mainpic/49.jpg" class="w-full h-full object-cover" alt="ขนมบ้วง">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ขนมบ้วง</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 50 นาที | ยาก | ภาคกลาง</p>
+                            <div class="text-orange-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('foi-thong')">
+                        <div class="h-40 bg-gradient-to-br from-yellow-300 via-gold-300 to-orange-300 flex items-center justify-center">
+                            <img src="index/mainpic/50.jpg" class="w-full h-full object-cover" alt="ฝอยทอง">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ฝอยทอง</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 45 นาที | ยาก | ภาคกลาง</p>
+                            <div class="text-yellow-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('kanom-chan')">
+                        <div class="h-40 bg-gradient-to-br from-green-300 via-white to-pink-300 flex items-center justify-center">
+                            <img src="index/mainpic/51.jpg" class="w-full h-full object-cover" alt="ขนมชั้น">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ขนมชั้น</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 90 นาที | ยาก | ภาคกลาง</p>
+                            <div class="text-green-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('lod-chong')">
+                        <div class="h-40 bg-gradient-to-br from-green-300 via-emerald-300 to-teal-300 flex items-center justify-center">
+                            <img src="index/mainpic/52.jpg" class="w-full h-full object-cover" alt="ลอดช่อง">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ลอดช่อง</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 35 นาที | ปานกลาง | ทั่วไทย</p>
+                            <div class="text-green-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('kanom-tako')">
+                        <div class="h-40 bg-gradient-to-br from-white via-coconut-200 to-green-200 flex items-center justify-center">
+                            <img src="index/mainpic/53.jpg" class="w-full h-full object-cover" alt="ขนมตะโก้">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ขนมตะโก้</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 40 นาที | ปานกลาง | ภาคใต้</p>
+                            <div class="text-green-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('bua-loy')">
+                        <div class="h-40 bg-gradient-to-br from-purple-300 via-pink-300 to-white flex items-center justify-center">
+                            <img src="index/mainpic/54.jpg" class="w-full h-full object-cover" alt="บัวลอย">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">บัวลอย</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 30 นาที | ง่าย | ทั่วไทย</p>
+                            <div class="text-purple-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('kanom-kluay')">
+                        <div class="h-40 bg-gradient-to-br from-yellow-300 via-orange-300 to-brown-300 flex items-center justify-center">
+                            <img src="index/mainpic/55.jpg" class="w-full h-full object-cover" alt="ขนมกล้วย">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ขนมกล้วย</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 25 นาที | ง่าย | ทั่วไทย</p>
+                            <div class="text-yellow-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('sangkaya-fak-thong')">
+                        <div class="h-40 bg-gradient-to-br from-orange-300 via-yellow-300 to-amber-300 flex items-center justify-center">
+                            <img src="index/mainpic/56.jpg" class="w-full h-full object-cover" alt="สังขยาฟักทอง">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">สังขยาฟักทอง</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 60 นาที | ปานกลาง | ภาคกลาง</p>
+                            <div class="text-orange-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Page -->
+    <div id="contact" class="page">
+        <div class="max-w-4xl mx-auto px-4 py-12">
+            <h2 class="text-4xl font-bold text-center mb-12 text-gray-800">ติดต่อเรา</h2>
+            
+            <div class="grid md:grid-cols-2 gap-12">
+                <!-- Contact Info -->
+                <div class="bg-white rounded-xl shadow-lg p-8">
+                    <h3 class="text-2xl font-semibold mb-6 text-orange-600">ข้อมูลติดต่อ</h3>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-3">
+                            <span class="text-2xl">📍</span>
+                            <div>
+                                <p class="font-semibold">ที่อยู่</p>
+                                <p class="text-gray-600">123 ถนนอร่อยดี แขวงรสชาติ เขตอาหารไทย กรุงเทพฯ 10110</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center space-x-3">
+                            <span class="text-2xl">📞</span>
+                            <div>
+                                <p class="font-semibold">โทรศัพท์</p>
+                                <p class="text-gray-600">02-123-4567</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center space-x-3">
+                            <span class="text-2xl">📧</span>
+                            <div>
+                                <p class="font-semibold">อีเมล</p>
+                                <p class="text-gray-600">info@aroydee.com</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center space-x-3">
+                            <span class="text-2xl">⏰</span>
+                            <div>
+                                <p class="font-semibold">เวลาทำการ</p>
+                                <p class="text-gray-600">จันทร์ - ศุกร์: 9:00 - 18:00</p>
+                                <p class="text-gray-600">เสาร์ - อาทิตย์: 10:00 - 16:00</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Contact Form -->
+                <div class="bg-white rounded-xl shadow-lg p-8">
+                    <h3 class="text-2xl font-semibold mb-6 text-orange-600">ส่งข้อความถึงเรา</h3>
+                    <p class="text-sm text-gray-500 mb-6 bg-yellow-50 p-3 rounded">*นี่เป็นแบบฟอร์มตัวอย่าง ไม่สามารถส่งข้อความจริงได้</p>
+                    
+                    <form class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">ชื่อ-นามสกุล</label>
+                            <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent" placeholder="กรุณากรอกชื่อของคุณ">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">อีเมล</label>
+                            <input type="email" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent" placeholder="example@email.com">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">หัวข้อ</label>
+                            <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent" placeholder="หัวข้อที่ต้องการสอบถาม">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">ข้อความ</label>
+                            <textarea rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent" placeholder="กรุณาระบุรายละเอียดที่ต้องการสอบถาม"></textarea>
+                        </div>
+                        
+                        <button type="button" onclick="showContactAlert()" class="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white py-3 rounded-lg font-semibold hover:from-orange-600 hover:to-red-600 transition-all">
+                            ส่งข้อความ 📤
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Thai Desserts -->
+            <div id="desserts" class="category-section mb-12 hidden">
+                <h3 class="text-3xl font-bold mb-8 text-pink-600 text-center">🍮 ของหวานไทย</h3>
+                <div class="grid md:grid-cols-4 gap-6">
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('mango-sticky-rice')">
+                        <div class="h-40 bg-gradient-to-br from-yellow-300 via-orange-300 to-amber-300 flex items-center justify-center">
+                            <img src="index/wpic/recipe-057.jpg" class="w-full h-full object-cover" alt="ข้าวเหนียวมะม่วง">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ข้าวเหนียวมะม่วง</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 45 นาที | ง่าย | ทั่วไทย</p>
+                            <div class="text-yellow-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('thong-yip')">
+                        <div class="h-40 bg-gradient-to-br from-yellow-300 via-orange-300 to-red-300 flex items-center justify-center">
+                            <img src="index/wpic/recipe-058.jpg" class="w-full h-full object-cover" alt="ทองหยิบ">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ทองหยิบ</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 60 นาที | ยาก | ภาคกลาง</p>
+                            <div class="text-yellow-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('kanom-krok')">
+                        <div class="h-40 bg-gradient-to-br from-white via-cream-200 to-yellow-200 flex items-center justify-center">
+                            <img src="index/wpic/recipe-059.jpg" class="w-full h-full object-cover" alt="ขนมครก">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ขนมครก</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 30 นาที | ปานกลาง | ทั่วไทย</p>
+                            <div class="text-orange-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('tub-tim-grob')">
+                        <div class="h-40 bg-gradient-to-br from-red-300 via-pink-300 to-rose-300 flex items-center justify-center">
+                            <img src="index/wpic/recipe-060.jpg" class="w-full h-full object-cover" alt="ทับทิมกรอบ">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ทับทิมกรอบ</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 40 นาที | ปานกลาง | ภาคกลาง</p>
+                            <div class="text-red-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('kanom-buang')">
+                        <div class="h-40 bg-gradient-to-br from-orange-300 via-yellow-300 to-amber-300 flex items-center justify-center">
+                            <img src="index/wpic/recipe-061.jpg" class="w-full h-full object-cover" alt="ขนมบ้วง">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ขนมบ้วง</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 50 นาที | ยาก | ภาคกลาง</p>
+                            <div class="text-orange-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('foi-thong')">
+                        <div class="h-40 bg-gradient-to-br from-yellow-300 via-gold-300 to-orange-300 flex items-center justify-center">
+                            <img src="index/wpic/recipe-062.jpg" class="w-full h-full object-cover" alt="ฝอยทอง">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ฝอยทอง</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 45 นาที | ยาก | ภาคกลาง</p>
+                            <div class="text-yellow-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('kanom-chan')">
+                        <div class="h-40 bg-gradient-to-br from-green-300 via-white to-pink-300 flex items-center justify-center">
+                            <img src="index/wpic/recipe-063.jpg" class="w-full h-full object-cover" alt="ขนมชั้น">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ขนมชั้น</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 90 นาที | ยาก | ภาคกลาง</p>
+                            <div class="text-green-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('lod-chong')">
+                        <div class="h-40 bg-gradient-to-br from-green-300 via-emerald-300 to-teal-300 flex items-center justify-center">
+                            <img src="index/wpic/recipe-064.jpg" class="w-full h-full object-cover" alt="ลอดช่อง">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ลอดช่อง</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 35 นาที | ปานกลาง | ทั่วไทย</p>
+                            <div class="text-green-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('kanom-tako')">
+                        <div class="h-40 bg-gradient-to-br from-white via-coconut-200 to-green-200 flex items-center justify-center">
+                            <img src="index/wpic/recipe-065.jpg" class="w-full h-full object-cover" alt="ขนมตะโก้">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ขนมตะโก้</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 40 นาที | ปานกลาง | ภาคใต้</p>
+                            <div class="text-green-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('bua-loy')">
+                        <div class="h-40 bg-gradient-to-br from-purple-300 via-pink-300 to-white flex items-center justify-center">
+                            <img src="index/wpic/recipe-066.jpg" class="w-full h-full object-cover" alt="บัวลอย">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">บัวลอย</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 30 นาที | ง่าย | ทั่วไทย</p>
+                            <div class="text-purple-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('kanom-kluay')">
+                        <div class="h-40 bg-gradient-to-br from-yellow-300 via-orange-300 to-brown-300 flex items-center justify-center">
+                            <img src="index/wpic/recipe-067.jpg" class="w-full h-full object-cover" alt="ขนมกล้วย">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ขนมกล้วย</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 25 นาที | ง่าย | ทั่วไทย</p>
+                            <div class="text-yellow-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('sangkaya-fak-thong')">
+                        <div class="h-40 bg-gradient-to-br from-orange-300 via-yellow-300 to-amber-300 flex items-center justify-center">
+                            <img src="index/wpic/recipe-068.jpg" class="w-full h-full object-cover" alt="สังขยาฟักทอง">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">สังขยาฟักทอง</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 60 นาที | ปานกลาง | ภาคกลาง</p>
+                            <div class="text-orange-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recipe Modal -->
+    <div id="recipeModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center p-4 modal">
+        <div class="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 id="recipeTitle" class="text-2xl font-bold text-orange-600"></h3>
+                    <button onclick="closeRecipe()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+                </div>
+                <div id="recipeContent"></div>
+            </div>
+
+            <!-- Thai Desserts -->
+            <div id="desserts" class="category-section mb-12 hidden">
+                <h3 class="text-3xl font-bold mb-8 text-pink-600 text-center">🍮 ของหวานไทย</h3>
+                <div class="grid md:grid-cols-4 gap-6">
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('mango-sticky-rice')">
+                        <div class="h-40 bg-gradient-to-br from-yellow-300 via-orange-300 to-amber-300 flex items-center justify-center">
+                            <img src="index/wpic/recipe-069.jpg" class="w-full h-full object-cover" alt="ข้าวเหนียวมะม่วง">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ข้าวเหนียวมะม่วง</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 45 นาที | ง่าย | ทั่วไทย</p>
+                            <div class="text-yellow-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('thong-yip')">
+                        <div class="h-40 bg-gradient-to-br from-yellow-300 via-orange-300 to-red-300 flex items-center justify-center">
+                            <img src="index/wpic/recipe-070.jpg" class="w-full h-full object-cover" alt="ทองหยิบ">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ทองหยิบ</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 60 นาที | ยาก | ภาคกลาง</p>
+                            <div class="text-yellow-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('kanom-krok')">
+                        <div class="h-40 bg-gradient-to-br from-white via-cream-200 to-yellow-200 flex items-center justify-center">
+                            <img src="index/wpic/recipe-071.jpg" class="w-full h-full object-cover" alt="ขนมครก">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ขนมครก</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 30 นาที | ปานกลาง | ทั่วไทย</p>
+                            <div class="text-orange-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('tub-tim-grob')">
+                        <div class="h-40 bg-gradient-to-br from-red-300 via-pink-300 to-rose-300 flex items-center justify-center">
+                            <img src="index/wpic/recipe-072.jpg" class="w-full h-full object-cover" alt="ทับทิมกรอบ">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ทับทิมกรอบ</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 40 นาที | ปานกลาง | ภาคกลาง</p>
+                            <div class="text-red-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('kanom-buang')">
+                        <div class="h-40 bg-gradient-to-br from-orange-300 via-yellow-300 to-amber-300 flex items-center justify-center">
+                            <img src="index/wpic/recipe-073.jpg" class="w-full h-full object-cover" alt="ขนมบ้วง">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ขนมบ้วง</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 50 นาที | ยาก | ภาคกลาง</p>
+                            <div class="text-orange-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('foi-thong')">
+                        <div class="h-40 bg-gradient-to-br from-yellow-300 via-gold-300 to-orange-300 flex items-center justify-center">
+                            <img src="index/wpic/recipe-074.jpg" class="w-full h-full object-cover" alt="ฝอยทอง">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ฝอยทอง</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 45 นาที | ยาก | ภาคกลาง</p>
+                            <div class="text-yellow-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('kanom-chan')">
+                        <div class="h-40 bg-gradient-to-br from-green-300 via-white to-pink-300 flex items-center justify-center">
+                            <img src="index/wpic/recipe-075.jpg" class="w-full h-full object-cover" alt="ขนมชั้น">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ขนมชั้น</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 90 นาที | ยาก | ภาคกลาง</p>
+                            <div class="text-green-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('lod-chong')">
+                        <div class="h-40 bg-gradient-to-br from-green-300 via-emerald-300 to-teal-300 flex items-center justify-center">
+                            <img src="index/wpic/recipe-076.jpg" class="w-full h-full object-cover" alt="ลอดช่อง">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ลอดช่อง</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 35 นาที | ปานกลาง | ทั่วไทย</p>
+                            <div class="text-green-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('kanom-tako')">
+                        <div class="h-40 bg-gradient-to-br from-white via-coconut-200 to-green-200 flex items-center justify-center">
+                            <img src="index/wpic/recipe-077.jpg" class="w-full h-full object-cover" alt="ขนมตะโก้">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ขนมตะโก้</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 40 นาที | ปานกลาง | ภาคใต้</p>
+                            <div class="text-green-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('bua-loy')">
+                        <div class="h-40 bg-gradient-to-br from-purple-300 via-pink-300 to-white flex items-center justify-center">
+                            <img src="index/wpic/recipe-078.jpg" class="w-full h-full object-cover" alt="บัวลอย">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">บัวลอย</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 30 นาที | ง่าย | ทั่วไทย</p>
+                            <div class="text-purple-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('kanom-kluay')">
+                        <div class="h-40 bg-gradient-to-br from-yellow-300 via-orange-300 to-brown-300 flex items-center justify-center">
+                            <img src="index/wpic/recipe-079.jpg" class="w-full h-full object-cover" alt="ขนมกล้วย">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">ขนมกล้วย</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 25 นาที | ง่าย | ทั่วไทย</p>
+                            <div class="text-yellow-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+
+                    <div class="food-card bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105" onclick="showRecipe('sangkaya-fak-thong')">
+                        <div class="h-40 bg-gradient-to-br from-orange-300 via-yellow-300 to-amber-300 flex items-center justify-center">
+                            <img src="index/wpic/recipe-080.jpg" class="w-full h-full object-cover" alt="สังขยาฟักทอง">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold mb-2 text-gray-800">สังขยาฟักทอง</h4>
+                            <p class="text-xs text-gray-500 mb-2">เวลา: 60 นาที | ปานกลาง | ภาคกลาง</p>
+                            <div class="text-orange-600 text-sm font-medium">ดูสูตร →</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Carousel functionality
+        let currentSlide = 0;
+        const totalSlides = 4;
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            updateCarousel();
+        }
+
+        function previousSlide() {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            updateCarousel();
+        }
+
+        function goToSlide(slideIndex) {
+            currentSlide = slideIndex;
+            updateCarousel();
+        }
+
+        function updateCarousel() {
+            const track = document.getElementById('carousel-track');
+            const translateX = -currentSlide * 100;
+            track.style.transform = `translateX(${translateX}%)`;
+            
+            // Update indicators
+            const indicators = document.querySelectorAll('.slide-indicator');
+            indicators.forEach((indicator, index) => {
+                if (index === currentSlide) {
+                    indicator.className = 'slide-indicator w-3 h-3 rounded-full bg-orange-500 transition-all';
+                } else {
+                    indicator.className = 'slide-indicator w-3 h-3 rounded-full bg-gray-300 hover:bg-orange-300 transition-all';
+                }
+            });
+        }
+
+        // Auto-slide functionality (optional)
+        let autoSlideInterval;
+
+        function startAutoSlide() {
+            autoSlideInterval = setInterval(nextSlide, 5000); // Change slide every 5 seconds
+        }
+
+        function stopAutoSlide() {
+            clearInterval(autoSlideInterval);
+        }
+
+        // Start auto-slide when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            startAutoSlide();
+            
+            // Pause auto-slide on hover
+            const carouselContainer = document.querySelector('.relative');
+            carouselContainer.addEventListener('mouseenter', stopAutoSlide);
+            carouselContainer.addEventListener('mouseleave', startAutoSlide);
+        });
+
+        // Recipe data
+        const recipes = {
+            'fried-rice': {
+                title: 'ข้าวผัดกุ้ง 🍛',
+                ingredients: [
+                    'ข้าวสวย 2 จาน',
+                    'กุ้งสด 200 กรัม',
+                    'ไข่ไก่ 2 ฟอง',
+                    'หอมใหญ่ 1/2 หัว',
+                    'กระเทียม 3 กลีบ',
+                    'น้ำมันพืช 3 ช้อนโต๊ะ',
+                    'ซอสปรุงรส 2 ช้อนโต๊ะ',
+                    'น้ำตาลทราย 1 ช้อนชา'
+                ],
+                instructions: [
+                    'ตั้งกระทะใส่น้ำมัน ใส่กระเทียมสับลงผัดให้หอม',
+                    'ใส่กุ้งลงผัดจนสุก ตักขึ้นพักไว้',
+                    'ตอกไข่ลงในกระทะ คนให้เข้ากัน',
+                    'ใส่ข้าวสวยลงผัดให้เข้ากัน',
+                    'ใส่หอมใหญ่ ซอสปรุงรส น้ำตาล ผัดให้เข้ากัน',
+                    'ใส่กุ้งที่ผัดไว้ ผัดให้เข้ากันอีกครั้ง',
+                    'เสิร์ฟพร้อมแตงกวาและมะนาว'
+                ]
+            },
+            'khao-pad-pineapple': {
+                title: 'ข้าวผัดสับปะรด 🍍',
+                ingredients: [
+                    'ข้าวสวย 2 จาน',
+                    'สับปะรดสด 1 ถ้วย',
+                    'กุ้งสด 150 กรัม',
+                    'หมูหั่นเต็ม 100 กรัม',
+                    'ไข่ไก่ 2 ฟอง',
+                    'หอมใหญ่ 1/2 หัว',
+                    'กระเทียม 3 กลีบ',
+                    'ซอสปรุงรส 2 ช้อนโต๊ะ',
+                    'น้ำตาลทราย 1 ช้อนชา'
+                ],
+                instructions: [
+                    'ผัดกระเทียมให้หอม ใส่หมูและกุ้ง',
+                    'ตอกไข่ลงไป คนให้เข้ากัน',
+                    'ใส่ข้าวสวย ผัดให้เข้ากัน',
+                    'ใส่สับปะรดและหอมใหญ่',
+                    'ปรุงรสด้วยซอสปรุงรสและน้ำตาล',
+                    'ผัดให้เข้ากันดี เสิร์ฟร้อนๆ'
+                ]
+            },
+            'pad-see-ew': {
+                title: 'ผัดซีอิ๊ว 🍝',
+                ingredients: [
+                    'เส้นใหญ่ 300 กรัม',
+                    'หมูหั่นชิ้น 200 กรัม',
+                    'คะน้า 200 กรัม',
+                    'ไข่ไก่ 2 ฟอง',
+                    'กระเทียม 4 กลีบ',
+                    'ซีอิ๊วดำ 3 ช้อนโต๊ะ',
+                    'ซีอิ๊วขาว 2 ช้อนโต๊ะ',
+                    'น้ำตาลทราย 2 ช้อนชา'
+                ],
+                instructions: [
+                    'แช่เส้นใหญ่ในน้ำอุ่นจนนิ่ม',
+                    'ผัดกระเทียมให้หอม ใส่หมู',
+                    'ใส่เส้นใหญ่ ผัดให้เข้ากัน',
+                    'ใส่ซีอิ๊วดำและซีอิ๊วขาว',
+                    'ตอกไข่ลงไป คนให้เข้ากัน',
+                    'ใส่คะน้า ผัดจนสุก เสิร์ฟร้อนๆ'
+                ]
+            },
+            'khao-soi': {
+                title: 'ข้าวซอย 🍲',
+                ingredients: [
+                    'บะหมี่สด 300 กรัม',
+                    'เนื้อไก่ 300 กรัม',
+                    'กะทิ 400 มล.',
+                    'น้ำซุป 2 ถ้วย',
+                    'พริกแกงข้าวซอย 4 ช้อนโต๊ะ',
+                    'หอมแดง 3 หัว',
+                    'กระเทียม 4 กลีบ',
+                    'น้ำปลา 3 ช้อนโต๊ะ',
+                    'น้ำตาลปี๊บ 2 ช้อนโต๊ะ'
+                ],
+                instructions: [
+                    'ผัดพริกแกงกับกะทิให้หอม',
+                    'ใส่เนื้อไก่ ผัดจนสุก',
+                    'เติมน้ำซุป เคี่ยว 20 นาที',
+                    'ปรุงรสด้วยน้ำปลาและน้ำตาลปี๊บ',
+                    'ลวกบะหมี่ใส่ชาม ราดด้วยแกง',
+                    'โรยหอมแดงทอด เสิร์ฟร้อนๆ'
+                ]
+            },
+            'massaman-curry': {
+                title: 'แกงมัสมั่น 🥘',
+                ingredients: [
+                    'เนื้อวัว 500 กรัม',
+                    'มันฝรั่ง 2 หัว',
+                    'หอมใหญ่ 1 หัว',
+                    'กะทิ 400 มล.',
+                    'พริกแกงมัสมั่น 4 ช้อนโต๊ะ',
+                    'ถั่วลิสงคั่ว 1/2 ถ้วย',
+                    'น้ำปลา 3 ช้อนโต๊ะ',
+                    'น้ำตาลปี๊บ 3 ช้อนโต๊ะ',
+                    'น้ำมะขามเปียก 2 ช้อนโต๊ะ'
+                ],
+                instructions: [
+                    'ผัดพริกแกงกับกะทิให้หอม',
+                    'ใส่เนื้อวัว ผัดจนสุก',
+                    'เติมกะทิที่เหลือ เคี่ยว 45 นาที',
+                    'ใส่มันฝรั่งและหอมใหญ่',
+                    'ปรุงรสด้วยน้ำปลา น้ำตาลปี๊บ น้ำมะขาม',
+                    'โรยถั่วลิสง เสิร์ฟร้อนๆ'
+                ]
+            },
+            'pad-kra-pao-kai': {
+                title: 'ผัดกะเพราไก่ 🐔',
+                ingredients: [
+                    'เนื้อไก่สับ 300 กรัม',
+                    'ใบกะเพรา 1 ถ้วย',
+                    'พริกขี้หนู 8-10 เม็ด',
+                    'กระเทียม 5 กลีบ',
+                    'น้ำปลา 2 ช้อนโต๊ะ',
+                    'ซอสหอยนางรม 1 ช้อนโต๊ะ',
+                    'น้ำตาลทราย 1 ช้อนชา'
+                ],
+                instructions: [
+                    'โขลกพริกขี้หนูและกระเทียม',
+                    'ตั้งกระทะใส่น้ำมัน ใส่พริกกระเทียม',
+                    'ใส่เนื้อไก่สับ ผัดจนสุก',
+                    'ปรุงรสด้วยน้ำปลา ซอสหอยนางรม น้ำตาล',
+                    'ใส่ใบกะเพรา ผัดให้เข้ากัน',
+                    'เสิร์ฟพร้อมข้าวสวยและไข่ดาว'
+                ]
+            },
+            'gaeng-som': {
+                title: 'แกงส้มปลา 🐟',
+                ingredients: [
+                    'ปลาช่อน 300 กรัม',
+                    'ผักบุ้ง 200 กรัม',
+                    'มะเขือเทศ 2 ลูก',
+                    'พริกแกงส้ม 3 ช้อนโต๊ะ',
+                    'น้ำมะขามเปียก 4 ช้อนโต๊ะ',
+                    'น้ำปลา 3 ช้อนโต๊ะ',
+                    'น้ำตาลปี๊บ 2 ช้อนโต๊ะ'
+                ],
+                instructions: [
+                    'ต้มน้ำให้เดือด ใส่พริกแกงส้ม',
+                    'ใส่ปลาช่อน ต้มจนสุก',
+                    'ใส่มะเขือเทศ ต้มต่อ 5 นาที',
+                    'ปรุงรสด้วยน้ำมะขาม น้ำปลา น้ำตาลปี๊บ',
+                    'ใส่ผักบุ้ง ต้มจนสุก',
+                    'เสิร์ฟร้อนๆ พร้อมข้าวสวย'
+                ]
+            },
+            'sai-ua': {
+                title: 'ไส้อั่ว 🌭',
+                ingredients: [
+                    'หมูสับ 500 กรัม',
+                    'ข้าวต้มสุก 1 ถ้วย',
+                    'ใบมะกรูด 10 ใบ',
+                    'ตะไคร้ 3 ต้น',
+                    'ข่า 3 แว่น',
+                    'พริกขี้หนูแห้ง 10 เม็ด',
+                    'กระเทียม 6 กลีบ',
+                    'หอมแดง 4 หัว',
+                    'น้ำปลา 2 ช้อนโต๊ะ',
+                    'ไส้กรอกธรรมชาติ'
+                ],
+                instructions: [
+                    'โขลกพริกแกงให้ละเอียด',
+                    'ผสมหมูสับกับข้าวต้มและพริกแกง',
+                    'ใส่ใบมะกรูดซอย คนให้เข้ากัน',
+                    'ปรุงรสด้วยน้ำปลา',
+                    'ยัดใส่ไส้กรอก ผูกปลายให้แน่น',
+                    'ย่างไฟอ่อนจนสุก เสิร์ฟร้อนๆ'
+                ]
+            },
+            'khao-mok-gai': {
+                title: 'ข้าวหมกไก่ 🍚',
+                ingredients: [
+                    'ข้าวหอมมะลิ 2 ถ้วย',
+                    'เนื้อไก่ 500 กรัม',
+                    'กะทิ 1 ถ้วย',
+                    'น้ำซุปไก่ 3 ถ้วย',
+                    'หอมใหญ่ 2 หัว',
+                    'กระเทียม 6 กลีบ',
+                    'ขิง 2 นิ้ว',
+                    'ใบกะหรี่ 10 ใบ',
+                    'เครื่องเทศผสม 2 ช้อนชา'
+                ],
+                instructions: [
+                    'หมักไก่กับเครื่องเทศ 30 นาที',
+                    'ผัดหอมใหญ่ กระเทียม ขิง ให้หอม',
+                    'ใส่ไก่ ผัดจนสุก',
+                    'ใส่ข้าวและกะทิ คนให้เข้ากัน',
+                    'เติมน้ำซุป ต้มจนข้าวสุก',
+                    'โรยใบกะหรี่ เสิร์ฟร้อนๆ'
+                ]
+            },
+            'nam-prik-ong': {
+                title: 'น้ำพริกอ่อง 🌶️',
+                ingredients: [
+                    'หมูสับ 300 กรัม',
+                    'มะเขือเทศ 4 ลูก',
+                    'พริกแกงเผ็ด 3 ช้อนโต๊ะ',
+                    'กระเทียม 6 กลีบ',
+                    'หอมแดง 4 หัว',
+                    'กะปิ 1 ช้อนชา',
+                    'น้ำปลา 2 ช้อนโต๊ะ',
+                    'น้ำตาลปี๊บ 2 ช้อนโต๊ะ'
+                ],
+                instructions: [
+                    'โขลกพริกแกง กระเทียม หอมแดง กะปิ',
+                    'ผัดพริกแกงให้หอม',
+                    'ใส่หมูสับ ผัดจนสุก',
+                    'ใส่มะเขือเทศ ผัดจนแตก',
+                    'ปรุงรสด้วยน้ำปลาและน้ำตาลปี๊บ',
+                    'เสิร์ฟพร้อมผักสดและแคบหมู'
+                ]
+            },
+            'tom-yum': {
+                title: 'ต้มยำกุ้ง 🍜',
+                ingredients: [
+                    'กุ้งสด 300 กรัม',
+                    'เห็ดฟาง 100 กรัม',
+                    'ข่าอ่อน 3 แว่น',
+                    'ตะไคร้ 2 ต้น',
+                    'ใบมะกรูด 5 ใบ',
+                    'พริกขี้หนูแห้ง 5 เม็ด',
+                    'น้ำปลา 3 ช้อนโต๊ะ',
+                    'น้ำมะนาว 4 ช้อนโต๊ะ'
+                ],
+                instructions: [
+                    'ต้มน้ำให้เดือด ใส่ข่า ตะไคร้ ใบมะกรูด',
+                    'ใส่พริกขี้หนูแห้ง ต้มต่อ 5 นาที',
+                    'ใส่กุ้งและเห็ดฟาง ต้มจนกุ้งสุก',
+                    'ปรุงรสด้วยน้ำปลา',
+                    'ใส่น้ำมะนาว ชิมรสให้เปรี้ยว เผ็ด เค็ม',
+                    'โรยผักชี เสิร์ฟร้อนๆ'
+                ]
+            },
+            'som-tam': {
+                title: 'ส้มตำไทย 🥗',
+                ingredients: [
+                    'มะละกอดิบ 1 ลูก',
+                    'มะเขือเทศ 2 ลูก',
+                    'ถั่วฝักยาว 3-4 เส้น',
+                    'กุ้งแห้ง 2 ช้อนโต๊ะ',
+                    'ถั่วลิสงคั่ว 2 ช้อนโต๊ะ',
+                    'พริกขี้หนู 5-7 เม็ด',
+                    'กระเทียม 3 กลีบ',
+                    'น้ำปลา 3 ช้อนโต๊ะ',
+                    'น้ำมะนาว 3 ช้อนโต๊ะ',
+                    'น้ำตาลปี๊บ 2 ช้อนโต๊ะ'
+                ],
+                instructions: [
+                    'ปอกมะละกอ ฝอยเป็นเส้นยาว',
+                    'โขลกพริกและกระเทียมในครกให้แหลก',
+                    'ใส่ถั่วฝักยาว กุ้งแห้ง โขลกเบาๆ',
+                    'ใส่มะละกอฝอย โขลกให้เข้ากัน',
+                    'ปรุงรสด้วยน้ำปลา น้ำมะนาว น้ำตาลปี๊บ',
+                    'ใส่มะเขือเทศ ถั่วลิสง โขลกเบาๆ',
+                    'ชิมรสให้เปรี้ยว หวาน เผ็ด เค็ม เสิร์ฟทันที'
+                ]
+            },
+            'pad-thai': {
+                title: 'ผัดไทย 🍜',
+                ingredients: [
+                    'เส้นจันทน์ 200 กรัม',
+                    'กุ้งสด 150 กรัม',
+                    'เต้าหู้ 100 กรัม',
+                    'ไข่ไก่ 2 ฟอง',
+                    'ถั่วงอก 100 กรัม',
+                    'กุยช่าย 50 กรัม',
+                    'น้ำตาลปี๊บ 3 ช้อนโต๊ะ',
+                    'น้ำปลา 2 ช้อนโต๊ะ',
+                    'น้ำมะขามเปียก 3 ช้อนโต๊ะ'
+                ],
+                instructions: [
+                    'แช่เส้นจันทน์ในน้ำอุ่นจนนิ่ม',
+                    'ผัดกุ้งและเต้าหู้ให้สุก ตักขึ้น',
+                    'ใส่เส้นจันทน์ลงผัด เติมน้ำเล็กน้อย',
+                    'ปรุงรสด้วยน้ำตาลปี๊บ น้ำปลา น้ำมะขาม',
+                    'ใส่ไข่ คนให้เข้ากัน',
+                    'ใส่กุ้ง เต้าหู้ ถั่วงอก กุยช่าย',
+                    'เสิร์ฟพร้อมมะนาว'
+                ]
+            },
+            'basil-pork': {
+                title: 'ผัดกะเพราหมู 🌿',
+                ingredients: [
+                    'หมูสับ 300 กรัม',
+                    'ใบกะเพรา 1 ถ้วย',
+                    'พริกขี้หนู 7-10 เม็ด',
+                    'กระเทียม 5 กลีบ',
+                    'น้ำปลา 2 ช้อนโต๊ะ',
+                    'ซอสหอยนางรม 1 ช้อนโต๊ะ',
+                    'น้ำตาลทราย 1 ช้อนชา'
+                ],
+                instructions: [
+                    'โขลกพริกขี้หนูและกระเทียมให้แหลก',
+                    'ตั้งกระทะใส่น้ำมัน ใส่พริกกระเทียม',
+                    'ใส่หมูสับ ผัดจนสุก',
+                    'ปรุงรสด้วยน้ำปลา ซอสหอยนางรม น้ำตาล',
+                    'ใส่ใบกะเพรา ผัดให้เข้ากัน',
+                    'เสิร์ฟร้อนๆ พร้อมข้าวสวยและไข่ดาว'
+                ]
+            },
+            'green-curry': {
+                title: 'แกงเขียวหวานไก่ 🥥',
+                ingredients: [
+                    'เนื้อไก่ 300 กรัม',
+                    'กะทิ 400 มล.',
+                    'พริกแกงเขียวหวาน 3 ช้อนโต๊ะ',
+                    'มะเขือพวง 10 ลูก',
+                    'ใบโหระพา 1 ถ้วย',
+                    'ใบมะกรูด 5 ใบ',
+                    'น้ำปลา 3 ช้อนโต๊ะ'
+                ],
+                instructions: [
+                    'ตั้งกะทะ ใส่กะทิ 1/2 ถ้วย',
+                    'ใส่พริกแกงเขียวหวาน ผัดจนหอม',
+                    'ใส่เนื้อไก่ ผัดจนสุก',
+                    'ใส่กะทิที่เหลือ เคี่ยว 15 นาที',
+                    'ใส่มะเขือพวง ปรุงรสด้วยน้ำปลา',
+                    'ใส่ใบโหระพา ใบมะกรูด เสิร์ฟร้อนๆ'
+                ]
+            },
+            'tom-kha': {
+                title: 'ต้มข่าไก่ 🥛',
+                ingredients: [
+                    'เนื้อไก่ 300 กรัม',
+                    'กะทิ 400 มล.',
+                    'ข่าอ่อน 4 แว่น',
+                    'ตะไคร้ 2 ต้น',
+                    'ใบมะกรูด 6 ใบ',
+                    'เห็ดฟาง 100 กรัม',
+                    'น้ำปลา 3 ช้อนโต๊ะ',
+                    'น้ำมะนาว 3 ช้อนโต๊ะ'
+                ],
+                instructions: [
+                    'ต้มกะทิให้เดือด ใส่ข่า ตะไคร้',
+                    'ใส่เนื้อไก่ ต้มจนสุก',
+                    'ใส่เห็ดฟาง ใบมะกรูด',
+                    'ปรุงรสด้วยน้ำปลา',
+                    'ใส่น้ำมะนาว ชิมรส',
+                    'โรยผักชี เสิร์ฟร้อนๆ'
+                ]
+            },
+            'larb-pork': {
+                title: 'ลาบหมู 🥩',
+                ingredients: [
+                    'หมูสับ 300 กรัม',
+                    'ข้าวคั่ว 3 ช้อนโต๊ะ',
+                    'หอมแดง 3 หัว',
+                    'ผักชี 1/4 ถ้วย',
+                    'ใบสะระแหน่ 1/4 ถ้วย',
+                    'พริกป่น 2 ช้อนชา',
+                    'น้ำปลา 3 ช้อนโต๊ะ',
+                    'น้ำมะนาว 4 ช้อนโต๊ะ'
+                ],
+                instructions: [
+                    'ลวกหมูสับในน้ำเดือดจนสุก',
+                    'ผสมหมูกับข้าวคั่ว',
+                    'ใส่หอมแดงซอย ผักชี ใบสะระแหน่',
+                    'ปรุงรสด้วยน้ำปลา น้ำมะนาว',
+                    'โรยพริกป่น คนให้เข้ากัน',
+                    'เสิร์ฟพร้อมผักสด'
+                ]
+            },
+            'shrimp-salad': {
+                title: 'ยำกุ้ง 🦐',
+                ingredients: [
+                    'กุ้งสด 300 กรัม',
+                    'หอมแดง 3 หัว',
+                    'ตะไคร้ 2 ต้น',
+                    'ใบมะกรูด 5 ใบ',
+                    'พริกขี้หนู 5-7 เม็ด',
+                    'น้ำปลา 3 ช้อนโต๊ะ',
+                    'น้ำมะนาว 4 ช้อนโต๊ะ',
+                    'ผักชี 1/4 ถ้วย'
+                ],
+                instructions: [
+                    'ต้มกุ้งให้สุก ปอกเปลือก',
+                    'หั่นหอมแดง ตะไคร้ ใบมะกรูด',
+                    'โขลกพริกขี้หนูให้แหลก',
+                    'ผสมกุ้งกับหอมแดง ตะไคร้ ใบมะกรูด',
+                    'ปรุงรสด้วยน้ำปลา น้ำมะนาว',
+                    'โรยผักชี เสิร์ฟทันที'
+                ]
+            },
+            'red-curry': {
+                title: 'แกงเผ็ด 🌶️',
+                ingredients: [
+                    'เนื้อหมู 300 กรัม',
+                    'มะเขือพวง 10 ลูก',
+                    'ใบโหระพา 1 ถ้วย',
+                    'กะทิ 400 มล.',
+                    'พริกแกงเผ็ด 3 ช้อนโต๊ะ',
+                    'น้ำปลา 3 ช้อนโต๊ะ',
+                    'น้ำตาลปี๊บ 2 ช้อนโต๊ะ'
+                ],
+                instructions: [
+                    'ผัดพริกแกงกับกะทิให้หอม',
+                    'ใส่เนื้อหมู ผัดจนสุก',
+                    'เติมกะทิที่เหลือ เคี่ยว 15 นาที',
+                    'ใส่มะเขือพวง ปรุงรสด้วยน้ำปลา',
+                    'ใส่ใบโหระพา เสิร์ฟร้อนๆ'
+                ]
+            },
+            'gaeng-pa': {
+                title: 'แกงป่า 🌿',
+                ingredients: [
+                    'เนื้อหมู 300 กรัม',
+                    'หน่อไม้ 200 กรัม',
+                    'มะเขือพวง 10 ลูก',
+                    'ใบโหระพา 1 ถ้วย',
+                    'พริกแกงป่า 4 ช้อนโต๊ะ',
+                    'น้ำปลา 3 ช้อนโต๊ะ'
+                ],
+                instructions: [
+                    'ต้มน้ำให้เดือด ใส่พริกแกงป่า',
+                    'ใส่เนื้อหมู ต้มจนสุก',
+                    'ใส่หน่อไม้และมะเขือพวง',
+                    'ปรุงรสด้วยน้ำปลา',
+                    'ใส่ใบโหระพา เสิร์ฟร้อนๆ'
+                ]
+            },
+            'tom-saep': {
+                title: 'ต้มแซ่บ 🍖',
+                ingredients: [
+                    'กระดูกหมู 500 กรัม',
+                    'เห็ดฟาง 100 กรัม',
+                    'ตะไคร้ 3 ต้น',
+                    'ข่า 4 แว่น',
+                    'ใบมะกรูด 6 ใบ',
+                    'พริกขี้หนู 8 เม็ด',
+                    'น้ำปลา 3 ช้อนโต๊ะ',
+                    'น้ำมะนาว 4 ช้อนโต๊ะ'
+                ],
+                instructions: [
+                    'ต้มกระดูกหมูจนนุ่ม',
+                    'ใส่ตะไคร้ ข่า ใบมะกรูด',
+                    'ใส่เห็ดฟางและพริกขี้หนู',
+                    'ปรุงรสด้วยน้ำปลา',
+                    'ใส่น้ำมะนาว เสิร์ฟร้อนๆ'
+                ]
+            },
+            'gaeng-tai-pla': {
+                title: 'แกงไตปลา 🐟',
+                ingredients: [
+                    'ผักรวม 500 กรัม',
+                    'กุ้งแห้ง 50 กรัม',
+                    'พริกแกงไตปลา 4 ช้อนโต๊ะ',
+                    'น้ำปลา 3 ช้อนโต๊ะ',
+                    'น้ำตาลปี๊บ 2 ช้อนโต๊ะ'
+                ],
+                instructions: [
+                    'ต้มน้ำให้เดือด ใส่พริกแกงไตปลา',
+                    'ใส่กุ้งแห้ง ต้ม 10 นาที',
+                    'ใส่ผักรวม ต้มจนสุก',
+                    'ปรุงรสด้วยน้ำปลาและน้ำตาลปี๊บ',
+                    'เสิร์ฟร้อนๆ พร้อมข้าวสวย'
+                ]
+            },
+            'sup-nor-mai': {
+                title: 'ซุปหน่อไม้ 🎋',
+                ingredients: [
+                    'หน่อไม้สด 300 กรัม',
+                    'เนื้อหมู 200 กรัม',
+                    'เห็ดหูหนู 50 กรัม',
+                    'น้ำซุป 4 ถ้วย',
+                    'ซีอิ๊วขาว 2 ช้อนโต๊ะ',
+                    'พริกไทย 1 ช้อนชา'
+                ],
+                instructions: [
+                    'ต้มน้ำซุปให้เดือด',
+                    'ใส่เนื้อหมู ต้มจนสุก',
+                    'ใส่หน่อไม้และเห็ดหูหนู',
+                    'ปรุงรสด้วยซีอิ๊วขาว',
+                    'โรยพริกไทย เสิร์ฟร้อนๆ'
+                ]
+            },
+            'yam-wun-sen': {
+                title: 'ยำวุ้นเส้น 🍜',
+                ingredients: [
+                    'วุ้นเส้น 100 กรัม',
+                    'หมูสับ 150 กรัม',
+                    'กุ้งสด 100 กรัม',
+                    'หอมแดง 3 หัว',
+                    'ผักชี 1/4 ถ้วย',
+                    'น้ำปลา 3 ช้อนโต๊ะ',
+                    'น้ำมะนาว 4 ช้อนโต๊ะ',
+                    'น้ำตาลทราย 2 ช้อนชา'
+                ],
+                instructions: [
+                    'แช่วุ้นเส้นในน้ำอุ่นจนนิ่ม',
+                    'ลวกหมูสับและกุ้งให้สุก',
+                    'ผสมวุ้นเส้นกับหมูและกุ้ง',
+                    'ใส่หอมแดงซอย ผักชี',
+                    'ปรุงรสด้วยน้ำปลา น้ำมะนาว น้ำตาล',
+                    'เสิร์ฟทันที'
+                ]
+            },
+            'nam-tok': {
+                title: 'น้ำตกหมู 🥩',
+                ingredients: [
+                    'เนื้อหมูย่าง 300 กรัม',
+                    'ข้าวคั่ว 3 ช้อนโต๊ะ',
+                    'หอมแดง 4 หัว',
+                    'ผักชี 1/4 ถ้วย',
+                    'ใบสะระแหน่ 1/4 ถ้วย',
+                    'พริกป่น 2 ช้อนชา',
+                    'น้ำปลา 3 ช้อนโต๊ะ',
+                    'น้ำมะนาว 4 ช้อนโต๊ะ'
+                ],
+                instructions: [
+                    'ย่างเนื้อหมูให้สุก หั่นชิ้น',
+                    'ผสมเนื้อหมูกับข้าวคั่ว',
+                    'ใส่หอมแดงซอย ผักชี ใบสะระแหน่',
+                    'ปรุงรสด้วยน้ำปลา น้ำมะนาว',
+                    'โรยพริกป่น เสิร์ฟพร้อมผักสด'
+                ]
+            },
+            'yam-mama': {
+                title: 'ยำมาม่า 🍝',
+                ingredients: [
+                    'บะหมี่กึ่งสำเร็จรูป 2 ซอง',
+                    'กุ้งสด 150 กรัม',
+                    'หมูยอ 100 กรัม',
+                    'หอมแดง 3 หัว',
+                    'มะเขือเทศ 2 ลูก',
+                    'น้ำปลา 2 ช้อนโต๊ะ',
+                    'น้ำมะนาว 3 ช้อนโต๊ะ',
+                    'น้ำตาลทราย 1 ช้อนชา'
+                ],
+                instructions: [
+                    'ต้มบะหมี่ให้สุก สะเด็ดน้ำ',
+                    'ลวกกุ้งให้สุก',
+                    'ผสมบะหมี่กับกุ้งและหมูยอ',
+                    'ใส่หอมแดง มะเขือเทศ',
+                    'ปรุงรสด้วยน้ำปลา น้ำมะนาว น้ำตาล',
+                    'เสิร์ฟทันที'
+                ]
+            },
+            'yam-pla-duk-fu': {
+                title: 'ยำปลาดุกฟู 🐟',
+                ingredients: [
+                    'ปลาดุกทอดฟู 200 กรัม',
+                    'มะม่วงดิบ 1 ลูก',
+                    'หอมแดง 3 หัว',
+                    'ถั่วลิสงคั่ว 1/4 ถ้วย',
+                    'น้ำปลา 2 ช้อนโต๊ะ',
+                    'น้ำมะนาว 3 ช้อนโต๊ะ',
+                    'น้ำตาลปี๊บ 2 ช้อนโต๊ะ'
+                ],
+                instructions: [
+                    'ฉีกปลาดุกฟูเป็นชิ้นเล็ก',
+                    'ฝอยมะม่วงดิบ',
+                    'ผสมปลาดุกฟูกับมะม่วง',
+                    'ใส่หอมแดงซอย ถั่วลิสง',
+                    'ปรุงรสด้วยน้ำปลา น้ำมะนาว น้ำตาลปี๊บ',
+                    'เสิร์ฟทันที'
+                ]
+            },
+            'yam-tua-plu': {
+                title: 'ยำถั่วพลู 🫘',
+                ingredients: [
+                    'ถั่วพลู 300 กรัม',
+                    'กุ้งแห้ง 50 กรัม',
+                    'หอมแดง 3 หัว',
+                    'พริกขี้หนู 5 เม็ด',
+                    'น้ำปลา 2 ช้อนโต๊ะ',
+                    'น้ำมะนาว 3 ช้อนโต๊ะ',
+                    'น้ำตาลปี๊บ 2 ช้อนโต๊ะ'
+                ],
+                instructions: [
+                    'ลวกถั่วพลูให้สุก',
+                    'โขลกกุ้งแห้งให้แหลก',
+                    'ผสมถั่วพลูกับกุ้งแห้ง',
+                    'ใส่หอมแดง พริกขี้หนู',
+                    'ปรุงรสด้วยน้ำปลา น้ำมะนาว น้ำตาลปี๊บ',
+                    'เสิร์ฟทันที'
+                ]
+            },
+            'yam-khai-dao': {
+                title: 'ยำไข่ดาว 🍳',
+                ingredients: [
+                    'ไข่ไก่ 4 ฟอง',
+                    'หอมแดง 3 หัว',
+                    'มะเขือเทศ 2 ลูก',
+                    'พริกขี้หนู 6 เม็ด',
+                    'น้ำปลา 2 ช้อนโต๊ะ',
+                    'น้ำมะนาว 3 ช้อนโต๊ะ',
+                    'น้ำตาลทราย 1 ช้อนชา'
+                ],
+                instructions: [
+                    'ทอดไข่ดาวให้กรอบ',
+                    'หั่นไข่ดาวเป็นชิ้น',
+                    'ผสมไข่กับหอมแดง มะเขือเทศ',
+                    'ใส่พริกขี้หนูโขลก',
+                    'ปรุงรสด้วยน้ำปลา น้ำมะนาว น้ำตาล',
+                    'เสิร์ฟทันที'
+                ]
+            },
+            'yam-som-o': {
+                title: 'ยำส้มโอ 🍊',
+                ingredients: [
+                    'เนื้อส้มโอ 2 ถ้วย',
+                    'กุ้งสด 150 กรัม',
+                    'หมูยอ 100 กรัม',
+                    'หอมแดง 3 หัว',
+                    'ถั่วลิสงคั่ว 1/4 ถ้วย',
+                    'น้ำปลา 2 ช้อนโต๊ะ',
+                    'น้ำมะนาว 3 ช้อนโต๊ะ',
+                    'น้ำตาลปี๊บ 2 ช้อนโต๊ะ'
+                ],
+                instructions: [
+                    'แกะเนื้อส้มโอให้เป็นซีก',
+                    'ลวกกุ้งให้สุก',
+                    'ผสมส้มโอกับกุ้งและหมูยอ',
+                    'ใส่หอมแดงซอย ถั่วลิสง',
+                    'ปรุงรสด้วยน้ำปลา น้ำมะนาว น้ำตาลปี๊บ',
+                    'เสิร์ฟทันที'
+                ]
+            },
+            'gai-yang': {
+                title: 'ไก่ย่าง 🍗',
+                ingredients: [
+                    'ไก่ทั้งตัว 1 ตัว',
+                    'กระเทียม 8 กลีบ',
+                    'รากผักชี 5 ราก',
+                    'พริกไทยดำ 2 ช้อนชา',
+                    'น้ำปลา 3 ช้อนโต๊ะ',
+                    'น้ำตาลปี๊บ 2 ช้อนโต๊ะ',
+                    'น้ำมันงา 1 ช้อนโต๊ะ'
+                ],
+                instructions: [
+                    'โขลกกระเทียม รากผักชี พริกไทย',
+                    'ผสมกับน้ำปลา น้ำตาลปี๊บ น้ำมันงา',
+                    'หมักไก่ 2 ชั่วโมง',
+                    'ย่างไฟกลาง 45 นาที',
+                    'พลิกทุก 15 นาที',
+                    'เสิร์ฟพร้อมส้มตำและข้าวเหนียว'
+                ]
+            },
+            'moo-ping': {
+                title: 'หมูปิ้ง 🥩',
+                ingredients: [
+                    'เนื้อหมูสันคอ 500 กรัม',
+                    'กระเทียม 6 กลีบ',
+                    'รากผักชี 3 ราก',
+                    'น้ำปลา 3 ช้อนโต๊ะ',
+                    'น้ำตาลปี๊บ 3 ช้อนโต๊ะ',
+                    'น้ำมันหอย 1 ช้อนโต๊ะ'
+                ],
+                instructions: [
+                    'หั่นหมูเป็นชิ้นยาว',
+                    'โขลกกระเทียมและรากผักชี',
+                    'ผสมกับน้ำปลา น้ำตาลปี๊บ น้ำมันหอย',
+                    'หมักหมู 1 ชั่วโมง',
+                    'ปิ้งไฟกลางจนสุก',
+                    'เสิร์ฟพร้อมข้าวเหนียว'
+                ]
+            },
+            'pla-pao': {
+                title: 'ปลาเผา 🐟',
+                ingredients: [
+                    'ปลานิล 1 ตัว',
+                    'เกลือ 2 ช้อนชา',
+                    'ตะไคร้ 3 ต้น',
+                    'ใบมะกรูด 5 ใบ',
+                    'ข่า 3 แว่น'
+                ],
+                instructions: [
+                    'ขูดเกล็ดปลา ล้างให้สะอาด',
+                    'ใส่เกลือทั่วตัวปลา',
+                    'ยัดตะไคร้ ใบมะกรูด ข่า ในท้องปลา',
+                    'ห่อด้วยใบตอง',
+                    'เผาไฟถ่าน 20 นาที',
+                    'เสิร์ฟพร้อมน้ำจิ้มแจ่ว'
+                ]
+            },
+            'tod-man-pla': {
+                title: 'ทอดมันปลา 🍤',
+                ingredients: [
+                    'เนื้อปลากะพง 500 กรัม',
+                    'พริกแกงเผ็ด 2 ช้อนโต๊ะ',
+                    'ไข่ไก่ 1 ฟอง',
+                    'ถั่วฝักยาว 50 กรัม',
+                    'ใบมะกรูด 5 ใบ',
+                    'น้ำปลา 2 ช้อนโต๊ะ',
+                    'น้ำตาลทราย 1 ช้อนชา'
+                ],
+                instructions: [
+                    'ปั่นเนื้อปลากับพริกแกงให้ละเอียด',
+                    'ใส่ไข่ น้ำปลา น้ำตาล คนให้เข้ากัน',
+                    'ใส่ถั่วฝักยาวซอย ใบมะกรูดซอย',
+                    'ปั้นเป็นแผ่นกลม',
+                    'ทอดในน้ำมันร้อนจนเหลือง',
+                    'เสิร์ฟพร้อมน้ำจิ้มอาจาด'
+                ]
+            },
+            'thai-tea': {
+                title: 'ชาไทย 🧋',
+                ingredients: [
+                    'ชาไทย 4 ช้อนโต๊ะ',
+                    'น้ำร้อน 2 ถ้วย',
+                    'น้ำตาลทราย 4 ช้อนโต๊ะ',
+                    'นมข้นหวาน 4 ช้อนโต๊ะ',
+                    'นมสด 1/2 ถ้วย',
+                    'น้ำแข็ง'
+                ],
+                instructions: [
+                    'ชงชาไทยด้วยน้ำร้อน 5 นาที',
+                    'กรองเอาใบชาออก',
+                    'ใส่น้ำตาลทราย คนให้ละลาย',
+                    'ปล่อยให้เย็น',
+                    'ใส่น้ำแข็งในแก้ว เทชาลงไป',
+                    'ราดนมข้นหวานและนมสดด้านบน'
+                ]
+            },
+            'thai-coffee': {
+                title: 'กาแฟโบราณ ☕',
+                ingredients: [
+                    'กาแฟโบราณ 3 ช้อนโต๊ะ',
+                    'น้ำร้อน 1 ถ้วย',
+                    'น้ำตาลทราย 3 ช้อนโต๊ะ',
+                    'นมข้นหวาน 3 ช้อนโต๊ะ',
+                    'น้ำแข็ง'
+                ],
+                instructions: [
+                    'ชงกาแฟด้วยน้ำร้อน',
+                    'กรองด้วยถุงผ้า',
+                    'ใส่น้ำตาลทราย คนให้ละลาย',
+                    'ปล่อยให้เย็น',
+                    'ใส่น้ำแข็งในแก้ว',
+                    'เทกาแฟและราดนมข้นหวาน'
+                ]
+            },
+            'coconut-water': {
+                title: 'น้ำมะพร้าวสด 🥥',
+                ingredients: [
+                    'มะพร้าวอ่อน 2 ลูก',
+                    'น้ำแข็ง',
+                    'เกลือเล็กน้อย (ตามชอบ)',
+                    'น้ำตาลทราย 1 ช้อนชา (ตามชอบ)'
+                ],
+                instructions: [
+                    'เจาะมะพร้าวอ่อน',
+                    'เทน้ำมะพร้าวออกมา',
+                    'กรองเอาเศษออก',
+                    'ใส่เกลือและน้ำตาลเล็กน้อย',
+                    'ใส่น้ำแข็ง',
+                    'เสิร์ฟทันที'
+                ]
+            },
+            'lemon-soda': {
+                title: 'น้ำมะนาวโซดา 🍋',
+                ingredients: [
+                    'มะนาวสด 3 ลูก',
+                    'น้ำโซดา 1 ขวด',
+                    'น้ำตาลทราย 3 ช้อนโต๊ะ',
+                    'เกลือ 1/4 ช้อนชา',
+                    'น้ำแข็ง',
+                    'ใบมิ้นต์ (ตกแต่ง)'
+                ],
+                instructions: [
+                    'คั้นน้ำมะนาวให้ได้ 1/2 ถ้วย',
+                    'ผสมกับน้ำตาลและเกลือ',
+                    'คนให้ละลาย',
+                    'ใส่น้ำแข็งในแก้ว',
+                    'เทน้ำมะนาวและน้ำโซดา',
+                    'ตกแต่งด้วยใบมิ้นต์'
+                ]
+            },
+            'butterfly-pea': {
+                title: 'น้ำอัญชัน 🌺',
+                ingredients: [
+                    'ดอกอัญชันแห้ง 10 ดอก',
+                    'น้ำร้อน 2 ถ้วย',
+                    'น้ำตาลทราย 3 ช้อนโต๊ะ',
+                    'น้ำมะนาว 2 ช้อนโต๊ะ',
+                    'น้ำแข็ง'
+                ],
+                instructions: [
+                    'ชงดอกอัญชันด้วยน้ำร้อน 10 นาที',
+                    'กรองเอาดอกออก',
+                    'ใส่น้ำตาล คนให้ละลาย',
+                    'ปล่อยให้เย็น',
+                    'ใส่น้ำแข็งในแก้ว',
+                    'เทน้ำอัญชัน หยดน้ำมะนาว (จะเปลี่ยนสี)'
+                ]
+            },
+            'tamarind-juice': {
+                title: 'น้ำมะขาม 🍯',
+                ingredients: [
+                    'มะขามเปียก 1 ถ้วย',
+                    'น้ำร้อน 3 ถ้วย',
+                    'น้ำตาลปี๊บ 1/2 ถ้วย',
+                    'เกลือ 1/2 ช้อนชา',
+                    'น้ำแข็ง'
+                ],
+                instructions: [
+                    'แช่มะขามในน้ำร้อน 15 นาที',
+                    'บีบและกรองเอาเมล็ดออก',
+                    'ใส่น้ำตาลปี๊บและเกลือ',
+                    'คนให้ละลาย',
+                    'ชิมรสให้เปรี้ยวหวาน',
+                    'เสิร์ฟเย็นพร้อมน้ำแข็ง'
+                ]
+            },
+            'lychee-juice': {
+                title: 'น้ำลิ้นจี่ 🍑',
+                ingredients: [
+                    'ลิ้นจี่สด 20 ลูก',
+                    'น้ำเปล่า 2 ถ้วย',
+                    'น้ำตาลทราย 3 ช้อนโต๊ะ',
+                    'น้ำมะนาว 1 ช้อนโต๊ะ',
+                    'น้ำแข็ง'
+                ],
+                instructions: [
+                    'ปอกเปลือกลิ้นจี่ เอาเมล็ดออก',
+                    'ปั่นลิ้นจี่กับน้ำ',
+                    'กรองเอากาก',
+                    'ใส่น้ำตาลและน้ำมะนาว',
+                    'คนให้เข้ากัน',
+                    'เสิร์ฟเย็นพร้อมน้ำแข็ง'
+                ]
+            },
+            'chrysanthemum-tea': {
+                title: 'น้ำเก๊กฮวย 🌼',
+                ingredients: [
+                    'ดอกเก๊กฮวยแห้ง 15 กรัม',
+                    'น้ำร้อน 4 ถ้วย',
+                    'น้ำตาลก้อน 3 ก้อน',
+                    'เกลือเล็กน้อย'
+                ],
+                instructions: [
+                    'ล้างดอกเก๊กฮวยให้สะอาด',
+                    'ชงด้วยน้ำร้อน 20 นาที',
+                    'กรองเอาดอกออก',
+                    'ใส่น้ำตาลก้อนและเกลือ',
+                    'คนให้ละลาย',
+                    'เสิร์ฟร้อนหรือเย็นตามชอบ'
+                ]
+            },
+            'longan-juice': {
+                title: 'น้ำลำไย 🟤',
+                ingredients: [
+                    'ลำไยสด 30 ลูก',
+                    'น้ำเปล่า 2 ถ้วย',
+                    'น้ำตาลทราย 2 ช้อนโต๊ะ',
+                    'น้ำแข็ง'
+                ],
+                instructions: [
+                    'ปอกเปลือกลำไย เอาเมล็ดออก',
+                    'ปั่นลำไยกับน้ำ',
+                    'กรองเอากาก',
+                    'ใส่น้ำตาล คนให้ละลาย',
+                    'ชิมรสความหวาน',
+                    'เสิร์ฟเย็นพร้อมน้ำแข็ง'
+                ]
+            },
+            'pandanus-juice': {
+                title: 'น้ำใบเตย 🌿',
+                ingredients: [
+                    'ใบเตยสด 20 ใบ',
+                    'น้ำเปล่า 3 ถ้วย',
+                    'น้ำตาลทราย 4 ช้อนโต๊ะ',
+                    'เกลือ 1/4 ช้อนชา',
+                    'น้ำแข็ง'
+                ],
+                instructions: [
+                    'ล้างใบเตยให้สะอาด',
+                    'ปั่นใบเตยกับน้ำ',
+                    'กรองเอากากใบเตย',
+                    'ใส่น้ำตาลและเกลือ',
+                    'คนให้ละลาย',
+                    'เสิร์ฟเย็นพร้อมน้ำแข็ง'
+                ]
+            },
+            'mango-sticky-rice': {
+                title: 'ข้าวเหนียวมะม่วง 🥭',
+                ingredients: [
+                    'ข้าวเหนียว 2 ถ้วย',
+                    'มะม่วงสุก 2 ลูก',
+                    'กะทิ 1 ถ้วย',
+                    'น้ำตาลทราย 1/2 ถ้วย',
+                    'เกลือ 1/2 ช้อนชา',
+                    'แป้งข้าวโพด 1 ช้อนโต๊ะ'
+                ],
+                instructions: [
+                    'แช่ข้าวเหนียวข้ามคืน',
+                    'นึ่งข้าวเหนียว 25 นาที',
+                    'ต้มกะทิกับน้ำตาลและเกลือ',
+                    'ผสมข้าวเหนียวกับกะทิ',
+                    'ปอกมะม่วงหั่นชิ้น',
+                    'เสิร์ฟพร้อมกะทิข้น'
+                ]
+            },
+            'thong-yip': {
+                title: 'ทองหยิบ 🥚',
+                ingredients: [
+                    'ไข่แดง 10 ฟอง',
+                    'น้ำตาลทราย 1 ถ้วย',
+                    'น้ำเปล่า 1/2 ถ้วย',
+                    'น้ำดอกไม้ 1 ช้อนชา',
+                    'น้ำมันพืช (สำหรับทอด)'
+                ],
+                instructions: [
+                    'ต้มน้ำตาลกับน้ำจนข้น',
+                    'ใส่น้ำดอกไม้ คนให้เข้ากัน',
+                    'ตีไข่แดงให้เข้ากัน',
+                    'หยดไข่แดงลงในน้ำเชื่อมร้อน',
+                    'ตักขึ้นเมื่อสุก',
+                    'จัดใส่ถ้วย เสิร์ฟเย็น'
+                ]
+            },
+            'kanom-krok': {
+                title: 'ขนมครก 🥥',
+                ingredients: [
+                    'แป้งข้าวเจ้า 1 ถ้วย',
+                    'กะทิ 1 ถ้วย',
+                    'น้ำตาลทราย 1/2 ถ้วย',
+                    'เกลือ 1/2 ช้อนชา',
+                    'ข้าวโพดหวาน 1/2 ถ้วย',
+                    'หอมแดงซอย 2 ช้อนโต๊ะ'
+                ],
+                instructions: [
+                    'ผสมแป้งข้าวเจ้ากับกะทิ',
+                    'ใส่น้ำตาลและเกลือ คนให้ละลาย',
+                    'กรองส่วนผสมให้เนียน',
+                    'ตั้งกระทะขนมครกบนไฟ',
+                    'เทแป้งลงช่อง ใส่ข้าวโพดและหอมแดง',
+                    'ทอดจนกรอบ เสิร์ฟร้อนๆ'
+                ]
+            },
+            'tub-tim-grob': {
+                title: 'ทับทิมกรอบ 💎',
+                ingredients: [
+                    'แห้วกิ้ม 200 กรัม',
+                    'แป้งมันสำปะหลัง 1/2 ถ้วย',
+                    'สีผสมอาหารแดง',
+                    'กะทิ 1 ถ้วย',
+                    'น้ำตาลทราย 1/4 ถ้วย',
+                    'เกลือ 1/4 ช้อนชา',
+                    'น้ำแข็งใส'
+                ],
+                instructions: [
+                    'หั่นแห้วกิ้มเป็นลูกเต๋าเล็ก',
+                    'ผสมกับสีแดง คลุกให้ทั่ว',
+                    'คลุกกับแป้งมันสำปะหลัง',
+                    'ลวกในน้ำเดือดจนใส',
+                    'ต้มกะทิกับน้ำตาลและเกลือ',
+                    'เสิร์ฟในน้ำแข็งใส ราดกะทิ'
+                ]
+            },
+            'kanom-buang': {
+                title: 'ขนมบ้วง 🌮',
+                ingredients: [
+                    'แป้งข้าวเจ้า 1 ถ้วย',
+                    'แป้งมันสำปะหลัง 1/4 ถ้วย',
+                    'กะทิ 1 ถ้วย',
+                    'น้ำตาลทราย 1/2 ถ้วย',
+                    'เกลือ 1/2 ช้อนชา',
+                    'ไข่แดง 2 ฟอง',
+                    'มะพร้าวขูดฝอย 1 ถ้วย'
+                ],
+                instructions: [
+                    'ผสมแป้งทั้งสองชนิด',
+                    'เติมกะทิ น้ำตาล เกลือ คนให้เข้ากัน',
+                    'กรองส่วนผสมให้เนียน',
+                    'ทำไส้ด้วยไข่แดงและมะพร้าว',
+                    'ทอดแป้งในกระทะพิเศษ',
+                    'ใส่ไส้ พับครึ่ง เสิร์ฟทันที'
+                ]
+            },
+            'foi-thong': {
+                title: 'ฝอยทอง 🍜',
+                ingredients: [
+                    'ไข่ไก่ 8 ฟอง',
+                    'น้ำตาลทราย 2 ถ้วย',
+                    'น้ำเปล่า 1 ถ้วย',
+                    'น้ำดอกไม้ 1 ช้อนชา',
+                    'น้ำมันพืช (สำหรับทอด)'
+                ],
+                instructions: [
+                    'ต้มน้ำตาลกับน้ำจนข้น',
+                    'ใส่น้ำดอกไม้',
+                    'ตีไข่ให้เข้ากัน กรองให้เนียน',
+                    'เจาะรูเล็กในกรวยหรือถุง',
+                    'หยดไข่เป็นเส้นลงในน้ำเชื่อมร้อน',
+                    'ตักขึ้นเมื่อสุก จัดเป็นรัง'
+                ]
+            },
+            'kanom-chan': {
+                title: 'ขนมชั้น 🍰',
+                ingredients: [
+                    'แป้งข้าวเจ้า 1 ถ้วย',
+                    'แป้งมันสำปะหลัง 1/2 ถ้วย',
+                    'กะทิ 2 ถ้วย',
+                    'น้ำตาลทราย 1 ถ้วย',
+                    'เกลือ 1 ช้อนชา',
+                    'สีผสมอาหาร 3 สี',
+                    'ใบตอง'
+                ],
+                instructions: [
+                    'ผสมแป้งทั้งสองชนิด',
+                    'ต้มกะทิกับน้ำตาลและเกลือ',
+                    'ผสมแป้งกับกะทิ แบ่งเป็น 3 ส่วน',
+                    'ใส่สีต่างๆ ในแต่ละส่วน',
+                    'นึ่งทีละชั้น ชั้นละ 5 นาที',
+                    'ตัดเป็นชิ้น เสิร์ฟเย็น'
+                ]
+            },
+            'lod-chong': {
+                title: 'ลอดช่อง 🍧',
+                ingredients: [
+                    'แป้งมันสำปะหลัง 1/2 ถ้วย',
+                    'น้ำใบเตย 1 ถ้วย',
+                    'กะทิ 1 ถ้วย',
+                    'น้ำตาลทราย 1/2 ถ้วย',
+                    'เกลือ 1/4 ช้อนชา',
+                    'น้ำแข็งใส'
+                ],
+                instructions: [
+                    'ผสมแป้งมันกับน้ำใบเตย',
+                    'ต้มจนใส นวดให้เนียน',
+                    'อัดผ่านเครื่องลอดช่อง',
+                    'ลงในน้ำเย็น',
+                    'ต้มกะทิกับน้ำตาลและเกลือ',
+                    'เสิร์ฟในน้ำแข็งใส ราดกะทิ'
+                ]
+            },
+            'kanom-tako': {
+                title: 'ขนมตะโก้ 🥥',
+                ingredients: [
+                    'แป้งข้าวเจ้า 1 ถ้วย',
+                    'กะทิ 1 ถ้วย',
+                    'น้ำตาลทราย 1/2 ถ้วย',
+                    'เกลือ 1/2 ช้อนชา',
+                    'ใบเตย 5 ใบ',
+                    'มะพร้าวขูดฝอย 1 ถ้วย'
+                ],
+                instructions: [
+                    'ผสมแป้งข้าวเจ้ากับกะทิ',
+                    'ใส่น้ำตาล เกลือ ใบเตย',
+                    'ต้มจนข้น คนตลอดเวลา',
+                    'เทใส่ถ้วยใบตอง',
+                    'โรยมะพร้าวขูดด้านบน',
+                    'นึ่ง 15 นาที เสิร์ฟเย็น'
+                ]
+            },
+            'bua-loy': {
+                title: 'บัวลอย 🍡',
+                ingredients: [
+                    'แป้งข้าวเหนียว 1 ถ้วย',
+                    'น้ำอุ่น 1/2 ถ้วย',
+                    'สีผสมอาหาร 3 สี',
+                    'กะทิ 2 ถ้วย',
+                    'น้ำตาลปี๊บ 1/2 ถ้วย',
+                    'เกลือ 1/2 ช้อนชา'
+                ],
+                instructions: [
+                    'ผสมแป้งข้าวเหนียวกับน้ำอุ่น',
+                    'แบ่งแป้งเป็น 3 ส่วน ใส่สีต่างๆ',
+                    'ปั้นเป็นลูกกลมเล็ก',
+                    'ต้มในน้ำเดือดจนลอยขึ้น',
+                    'ต้มกะทิกับน้ำตาลปี๊บและเกลือ',
+                    'เสิร์ฟบัวลอยในกะทิร้อน'
+                ]
+            },
+            'kanom-kluay': {
+                title: 'ขนมกล้วย 🍌',
+                ingredients: [
+                    'กล้วยน้ำว้าสุก 6 ลูก',
+                    'แป้งข้าวเจ้า 1/2 ถ้วย',
+                    'แป้งมันสำปะหลัง 1/4 ถ้วย',
+                    'กะทิ 1/2 ถ้วย',
+                    'น้ำตาลทราย 1/4 ถ้วย',
+                    'เกลือ 1/4 ช้อนชา'
+                ],
+                instructions: [
+                    'บดกล้วยให้ละเอียด',
+                    'ผสมแป้งทั้งสองชนิด',
+                    'เติมกะทิ น้ำตาล เกลือ',
+                    'ผสมกับกล้วยบด คนให้เข้ากัน',
+                    'ตักใส่ถ้วยใบตอง',
+                    'นึ่ง 20 นาที เสิร์ฟเย็น'
+                ]
+            },
+            'sangkaya-fak-thong': {
+                title: 'สังขยาฟักทอง 🎃',
+                ingredients: [
+                    'ฟักทอง 1 ลูก',
+                    'ไข่ไก่ 4 ฟอง',
+                    'กะทิ 1 ถ้วย',
+                    'น้ำตาลปี๊บ 1/2 ถ้วย',
+                    'เกลือ 1/4 ช้อนชา',
+                    'ใบเตย 3 ใบ'
+                ],
+                instructions: [
+                    'ผ่าฟักทองด้านบน ควักเมล็ดออก',
+                    'ตีไข่กับกะทิให้เข้ากัน',
+                    'ใส่น้ำตาลปี๊บ เกลือ ใบเตย',
+                    'กรองส่วนผสมให้เนียน',
+                    'เทใส่ฟักทอง ปิดฝา',
+                    'นึ่ง 45 นาที เสิร์ฟเย็น'
+                ]
+            }
+        };
+
+        // Category tab functions
+        function showCategory(categoryId) {
+            // Hide all category sections
+            document.querySelectorAll('.category-section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            // Show selected category
+            document.getElementById(categoryId).classList.remove('hidden');
+            
+            // Update category tabs
+            document.querySelectorAll('.category-tab').forEach(tab => {
+                tab.classList.remove('active');
+                // Reset to default styles based on category
+                if (tab.textContent.includes('🍛')) {
+                    tab.className = 'category-tab bg-white text-orange-600 border-2 border-orange-500 px-6 py-3 rounded-full font-semibold transition-all hover:bg-orange-50 hover:shadow-lg';
+                } else if (tab.textContent.includes('🍲')) {
+                    tab.className = 'category-tab bg-white text-green-600 border-2 border-green-500 px-6 py-3 rounded-full font-semibold transition-all hover:bg-green-50 hover:shadow-lg';
+                } else if (tab.textContent.includes('🥗')) {
+                    tab.className = 'category-tab bg-white text-yellow-600 border-2 border-yellow-500 px-6 py-3 rounded-full font-semibold transition-all hover:bg-yellow-50 hover:shadow-lg';
+                } else if (tab.textContent.includes('🔥')) {
+                    tab.className = 'category-tab bg-white text-purple-600 border-2 border-purple-500 px-6 py-3 rounded-full font-semibold transition-all hover:bg-purple-50 hover:shadow-lg';
+                } else if (tab.textContent.includes('🧊')) {
+                    tab.className = 'category-tab bg-white text-cyan-600 border-2 border-cyan-500 px-6 py-3 rounded-full font-semibold transition-all hover:bg-cyan-50 hover:shadow-lg';
+                } else if (tab.textContent.includes('🍮')) {
+                    tab.className = 'category-tab bg-white text-pink-600 border-2 border-pink-500 px-6 py-3 rounded-full font-semibold transition-all hover:bg-pink-50 hover:shadow-lg';
+                }
+            });
+            
+            // Highlight active tab
+            const activeTab = event.target;
+            activeTab.classList.add('active');
+            if (categoryId === 'main-dishes') {
+                activeTab.className = 'category-tab active bg-gradient-to-r from-orange-500 to-red-500 text-white px-6 py-3 rounded-full font-semibold transition-all hover:shadow-lg';
+            } else if (categoryId === 'soups') {
+                activeTab.className = 'category-tab active bg-gradient-to-r from-green-500 to-emerald-500 text-white px-6 py-3 rounded-full font-semibold transition-all hover:shadow-lg';
+            } else if (categoryId === 'salads') {
+                activeTab.className = 'category-tab active bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-6 py-3 rounded-full font-semibold transition-all hover:shadow-lg';
+            } else if (categoryId === 'grilled') {
+                activeTab.className = 'category-tab active bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-3 rounded-full font-semibold transition-all hover:shadow-lg';
+            } else if (categoryId === 'drinks') {
+                activeTab.className = 'category-tab active bg-gradient-to-r from-cyan-500 to-blue-500 text-white px-6 py-3 rounded-full font-semibold transition-all hover:shadow-lg';
+            } else if (categoryId === 'desserts') {
+                activeTab.className = 'category-tab active bg-gradient-to-r from-pink-500 to-rose-500 text-white px-6 py-3 rounded-full font-semibold transition-all hover:shadow-lg';
+            }
+        }
+
+        // Navigation functions
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+            
+            // Update navigation buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+                btn.classList.add('text-gray-600', 'hover:text-orange-600');
+            });
+            
+            // Highlight active button
+            event.target.classList.add('active');
+            event.target.classList.remove('text-gray-600', 'hover:text-orange-600');
+        }
+
+        // Recipe modal functions
+        function showRecipe(recipeId) {
+            const recipe = recipes[recipeId];
+            if (!recipe) return;
+
+            const modal = document.getElementById('recipeModal');
+            const title = document.getElementById('recipeTitle');
+            const content = document.getElementById('recipeContent');
+
+            title.textContent = recipe.title;
+
+            content.innerHTML = `
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="text-lg font-semibold mb-3 text-orange-600">🛒 วัตถุดิบ</h4>
+                        <ul class="space-y-2">
+                            ${recipe.ingredients.map(ingredient => 
+                                `<li class="flex items-start space-x-2">
+                                    <span class="w-2 h-2 bg-orange-400 rounded-full mt-2 flex-shrink-0"></span>
+                                    <span class="text-sm">${ingredient}</span>
+                                </li>`
+                            ).join('')}
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-semibold mb-3 text-green-600">👨‍🍳 วิธีทำ</h4>
+                        <ol class="space-y-2">
+                            ${recipe.instructions.map((instruction, index) => 
+                                `<li class="flex space-x-2">
+                                    <span class="flex-shrink-0 w-5 h-5 bg-green-500 text-white rounded-full flex items-center justify-center text-xs font-semibold">${index + 1}</span>
+                                    <span class="text-sm">${instruction}</span>
+                                </li>`
+                            ).join('')}
+                        </ol>
+                    </div>
+                </div>
+                <div class="mt-6 p-4 bg-orange-50 rounded-lg">
+                    <p class="text-center text-gray-700 text-sm">
+                        <span class="text-xl">🍽️</span>
+                        <strong>เคล็ดลับ:</strong> ลองปรับรสชาติตามความชอบของคุณ และอย่าลืมเสิร์ฟร้อนๆ เพื่อความอร่อยที่สุด!
+                    </p>
+                </div>
+            `;
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeRecipe() {
+            const modal = document.getElementById('recipeModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // Contact form
+        function showContactAlert() {
+            alert('ขอบคุณสำหรับข้อความของคุณ! 🙏\n\nนี่เป็นแบบฟอร์มตัวอย่าง ในการใช้งานจริงจะต้องมีระบบส่งอีเมลที่เซิร์ฟเวอร์\n\nหากต้องการติดต่อจริง กรุณาใช้ข้อมูลการติดต่อที่แสดงไว้ข้างๆ');
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('recipeModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeRecipe();
+            }
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeRecipe();
+            }
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97091390c60e7336',t:'MTc1NTQzMjcxMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
